@@ -17,7 +17,7 @@
 #endif
 
 // Add your System.h include file here
-
+#include "System.h"
 
 
 int main(int argc, char* argv[])
@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
 
- /*   gpr460::System system;
-    system.Init();*/
+    TurboHybrid::System system;
+    system.Init();
 
     int* leak = DBG_NEW int[4096];
 
@@ -60,8 +60,8 @@ int main(int argc, char* argv[])
                 if (event.key.keysym.sym == SDLK_k)
                 {
                     std::cout << "K pressed!\n";
-                   // system.ErrorMessage(L"Do not press K!!!");
-                    //system.LogToErrorFile(L"Error: User pressed 'k'");
+                    system.ShowError(L"Do not press K!!!\n");
+                    system.LogToErrorFile(L"Error: User pressed 'k'\n");
                 }
                 if (event.key.keysym.sym == SDLK_ESCAPE)
                 {
@@ -92,6 +92,6 @@ int main(int argc, char* argv[])
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    //system.Shutdown();
+    system.Shutdown();
     return 0;
 }
