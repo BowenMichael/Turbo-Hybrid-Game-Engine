@@ -39,9 +39,9 @@ int main(int argc, char* argv[])
     int x = 0;
     int frame = 0;
 
-    system("pause");
+    //system("pause");
 
-    /*SDL_Event event;
+    SDL_Event event;
     bool quit = false;
     while (!quit)
     {
@@ -60,8 +60,8 @@ int main(int argc, char* argv[])
                 if (event.key.keysym.sym == SDLK_k)
                 {
                     std::cout << "K pressed!\n";
-                    system.ErrorMessage(L"Do not press K!!!");
-                    system.LogToErrorFile(L"Error: User pressed 'k'");
+                   // system.ErrorMessage(L"Do not press K!!!");
+                    //system.LogToErrorFile(L"Error: User pressed 'k'");
                 }
                 if (event.key.keysym.sym == SDLK_ESCAPE)
                 {
@@ -92,6 +92,6 @@ int main(int argc, char* argv[])
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    system.Shutdown();*/
+    //system.Shutdown();
     return 0;
 }
