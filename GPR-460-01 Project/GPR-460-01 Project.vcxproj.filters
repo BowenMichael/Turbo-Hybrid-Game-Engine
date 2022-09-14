@@ -13,18 +13,42 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\System">
+      <UniqueIdentifier>{9d6295da-6a01-48b7-9c95-cbeb5b668687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\System\Win32">
+      <UniqueIdentifier>{4209d38f-889b-4084-b15b-84152e9776a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\System\Emscripten">
+      <UniqueIdentifier>{cfe69b26-5b56-4696-baf9-f15a7a40092c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{4c0ac567-2744-4cfd-86ed-443cce858cbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01 Project.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\System_Emscripten.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\System_Win32.cpp">
+      <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="System.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="source\Headers\System_Common.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Headers\System_Win32.h">
+      <Filter>Header Files\System\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Headers\System_Emscripten.h">
+      <Filter>Header Files\System\Emscripten</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\System.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

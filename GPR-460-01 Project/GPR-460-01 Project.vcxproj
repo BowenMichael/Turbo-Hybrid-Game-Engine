@@ -131,10 +131,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01 Project.cpp" />
-    <ClCompile Include="System.cpp" />
+    <ClCompile Include="source\System_Emscripten.cpp" />
+    <ClCompile Include="source\System_Win32.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="System.h" />
+    <ClInclude Include="headers\System.h" />
+    <ClInclude Include="source\Headers\System_Common.h" />
+    <ClInclude Include="source\Headers\System_Emscripten.h" />
+    <ClInclude Include="source\Headers\System_Win32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
