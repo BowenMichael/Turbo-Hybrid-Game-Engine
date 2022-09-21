@@ -135,7 +135,7 @@
     <ClCompile Include="source\System_Win32.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\System.h" />
+    <ClInclude Include="source\headers\System.h" />
     <ClInclude Include="source\Headers\System_Common.h" />
     <ClInclude Include="source\Headers\System_Emscripten.h" />
     <ClInclude Include="source\Headers\System_Win32.h" />

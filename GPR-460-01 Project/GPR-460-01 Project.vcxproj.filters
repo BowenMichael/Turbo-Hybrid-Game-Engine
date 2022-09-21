@@ -47,7 +47,7 @@
     <ClInclude Include="source\Headers\System_Emscripten.h">
       <Filter>Header Files\System\Emscripten</Filter>
     </ClInclude>
-    <ClInclude Include="headers\System.h">
+    <ClInclude Include="source\headers\System.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
   </ItemGroup>
