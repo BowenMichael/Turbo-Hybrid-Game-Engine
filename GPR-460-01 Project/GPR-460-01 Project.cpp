@@ -6,7 +6,6 @@
 #include <iostream>
 #include <SDL.h>
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 
 #ifdef _DEBUG
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -19,6 +18,28 @@
 // Add your System.h include file here
 #include "System.h"
 
+void run_main_loop() {
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop([]() { handle_events(); }, 0, true);
+#else
+    while (handle_events())
+        ;
+#endif
+}
+
+int main() {
+    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_CreateWindowAndRenderer(300, 300, 0, &window, &renderer);
+
+    redraw();
+    run_main_loop();
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
+    SDL_Quit();
+}
 
 int main(int argc, char* argv[])
 {
