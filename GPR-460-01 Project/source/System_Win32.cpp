@@ -32,5 +32,6 @@ void TurboHybrid::System::ShowError(const TurboHybrid::string& message)
 
 void TurboHybrid::System::LogToErrorFile(const TurboHybrid::string& message)
 {
-	WriteFile(mhFile, message.c_str() , message.size() * sizeof(string::value_type), NULL, NULL);
+	string logMessage = L"[Date:Time] " + message;
+	WriteFile(mhFile, logMessage.c_str() , logMessage.size() * sizeof(string::value_type), NULL, NULL);
 }
