@@ -1,4 +1,4 @@
-#include "../headers/System_Win32.h"
+#include "Headers/System_Win32.h"
 
 
 void TurboHybrid::System::Init()
@@ -32,5 +32,5 @@ void TurboHybrid::System::ShowError(const TurboHybrid::string& message)
 
 void TurboHybrid::System::LogToErrorFile(const TurboHybrid::string& message)
 {
-	WriteFile(mhFile, message.c_str(), message.size(), NULL, NULL);
+	WriteFile(mhFile, message.c_str() , message.size() * sizeof(string::value_type), NULL, NULL);
 }
