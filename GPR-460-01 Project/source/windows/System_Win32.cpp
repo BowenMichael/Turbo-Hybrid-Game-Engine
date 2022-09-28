@@ -1,7 +1,10 @@
 #include "Headers/System_Win32.h"
 
+TurboHybrid::System* TurboHybrid::System::Create() {
+	return new TurboHybrid::System_Win32();
+}
 
-void TurboHybrid::System::Init()
+void TurboHybrid::System_Win32::Init()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
@@ -18,20 +21,26 @@ void TurboHybrid::System::Init()
 	}
 }
 
-void TurboHybrid::System::Shutdown()
+void TurboHybrid::System_Win32::Shutdown()
 {
 	CloseHandle(mhFile);
 }
 
-void TurboHybrid::System::ShowError(const TurboHybrid::string& message)
+void TurboHybrid::System_Win32::ShowError(const TurboHybrid::string& message)
 {
 	LogToErrorFile(message);
 	MessageBox(NULL, message.c_str(), L"Warning", MB_OK | MB_ICONWARNING);
 
 }
 
-void TurboHybrid::System::LogToErrorFile(const TurboHybrid::string& message)
+void TurboHybrid::System_Win32::LogToErrorFile(const TurboHybrid::string& message)
 {
 	string logMessage = L"[Date:Time] " + message;
 	WriteFile(mhFile, logMessage.c_str() , logMessage.size() * sizeof(string::value_type), NULL, NULL);
 }
+
+
+
+
+
+

@@ -130,15 +130,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GPR-460-01 Project.cpp" />
-    <ClCompile Include="source\System_Emscripten.cpp" />
-    <ClCompile Include="source\System_Win32.cpp" />
+    <ClCompile Include="GPR-460-01-Project.cpp" />
+    <ClCompile Include="source\emscripten\System_Emscripten.cpp" />
+    <ClCompile Include="source\windows\System_Win32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\emscripten\headers\System_Emscripten.h" />
     <ClInclude Include="source\headers\System.h" />
     <ClInclude Include="source\Headers\System_Common.h" />
-    <ClInclude Include="source\Headers\System_Emscripten.h" />
-    <ClInclude Include="source\Headers\System_Win32.h" />
+    <ClInclude Include="source\windows\headers\System_Win32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

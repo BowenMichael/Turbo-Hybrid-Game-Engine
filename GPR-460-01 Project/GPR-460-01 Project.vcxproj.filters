@@ -27,13 +27,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GPR-460-01 Project.cpp">
+    <ClCompile Include="GPR-460-01-Project.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\System_Emscripten.cpp">
+    <ClCompile Include="source\windows\System_Win32.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
-    <ClCompile Include="source\System_Win32.cpp">
+    <ClCompile Include="source\emscripten\System_Emscripten.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,14 +41,14 @@
     <ClInclude Include="source\Headers\System_Common.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="source\Headers\System_Win32.h">
-      <Filter>Header Files\System\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Headers\System_Emscripten.h">
-      <Filter>Header Files\System\Emscripten</Filter>
-    </ClInclude>
     <ClInclude Include="source\headers\System.h">
       <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\emscripten\headers\System_Emscripten.h">
+      <Filter>Header Files\System\Emscripten</Filter>
+    </ClInclude>
+    <ClInclude Include="source\windows\headers\System_Win32.h">
+      <Filter>Header Files\System\Win32</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

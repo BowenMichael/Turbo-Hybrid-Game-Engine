@@ -1,0 +1,1 @@
+../../../emsdk/emcmdprompt.bat
