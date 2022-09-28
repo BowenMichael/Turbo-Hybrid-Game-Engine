@@ -1,4 +1,4 @@
-name: MSBuild
+name: EMBuild
 
 on:
   push:
@@ -25,6 +25,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Setup Emscripten
+    # You may pin to the exact commit or the version.
+    # uses: lovasoa/setup-emscripten@849352670ee5c9b4e99cd4d06a323981e42c4704
+    # uses: lovasoa/setup-emscripten@v1
+    # with:
+    # Version of emscripten to install
+    # emscripten-version: # optional, default is latest
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
