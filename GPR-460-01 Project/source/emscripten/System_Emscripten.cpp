@@ -16,12 +16,12 @@ void TurboHybrid::System_Emscripten::Shutdown()
 
 void TurboHybrid::System_Emscripten::ShowError(const TurboHybrid::string& message)
 {
-	emscripten_run_script("alert(message)");
+	emscripten_run_script(((TurboHybrid::string)"alert('" + message.c_str() + "')").c_str());
 
 }
 
 void TurboHybrid::System_Emscripten::LogToErrorFile(const TurboHybrid::string& message)
 {
-	emscripten_run_script("console.log(message)");
+	emscripten_run_script(((TurboHybrid::string)"console.error('" + message.c_str() + "')").c_str());
 }
 #endif // __EMSCRIPTEN__

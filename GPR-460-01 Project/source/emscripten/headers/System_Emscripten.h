@@ -5,8 +5,8 @@
 #include <SDL.h>
 
 namespace TurboHybrid {
-	const string ERROR_K = "Do not press K!!!\n";
-	const string LOG_ERROR_K = "Error: User pressed 'k'\n";
+	const string ERROR_K = "Do not press K";
+	const string LOG_ERROR_K = "Error User pressed k";
 
 	class System_Emscripten : public System
 	{
