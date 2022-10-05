@@ -28,9 +28,7 @@ void TurboHybrid::System_Win32::Shutdown()
 
 void TurboHybrid::System_Win32::ShowError(const TurboHybrid::string& message)
 {
-	LogToErrorFile(message);
 	MessageBox(NULL, message.c_str(), L"Warning", MB_OK | MB_ICONWARNING);
-
 }
 
 void TurboHybrid::System_Win32::LogToErrorFile(const TurboHybrid::string& message)
