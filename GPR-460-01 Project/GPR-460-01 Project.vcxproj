@@ -131,13 +131,31 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01-Project.cpp" />
+    <ClCompile Include="source\Components\ColliderColorChanger.cpp" />
+    <ClCompile Include="source\Components\PlayerController.cpp" />
+    <ClCompile Include="source\Components\RectangleCollider.cpp" />
+    <ClCompile Include="source\Components\RectangleRenderer.cpp" />
+    <ClCompile Include="source\Components\Transform.cpp" />
     <ClCompile Include="source\emscripten\System_Emscripten.cpp" />
+    <ClCompile Include="source\GameObject.cpp" />
+    <ClCompile Include="source\InputSystem.cpp" />
     <ClCompile Include="source\windows\System_Win32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\emscripten\headers\System_Emscripten.h" />
+    <ClInclude Include="source\headers\Components\ColliderColorChanger.h" />
+    <ClInclude Include="source\headers\Components\Component_Common.h" />
+    <ClInclude Include="source\headers\Components\PlayerController.h" />
+    <ClInclude Include="source\headers\Components\RectangleCollider.h" />
+    <ClInclude Include="source\headers\Components\RectangleRenderer.h" />
+    <ClInclude Include="source\headers\Components\Transform.h" />
+    <ClInclude Include="source\headers\GameObject.h" />
+    <ClInclude Include="source\headers\InputSystem.h" />
     <ClInclude Include="source\headers\System.h" />
     <ClInclude Include="source\Headers\System_Common.h" />
+    <ClInclude Include="source\headers\Util\Color.h" />
+    <ClInclude Include="source\headers\Util\Rect.h" />
+    <ClInclude Include="source\headers\Util\Vector3.h" />
     <ClInclude Include="source\windows\headers\System_Win32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

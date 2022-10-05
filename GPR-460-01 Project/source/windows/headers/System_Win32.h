@@ -4,9 +4,7 @@
 #define _CRTDBG_MAP_ALLOC
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <string>
 #include "../../headers/System_Common.h"
-#include <SDL.h>
 
 namespace TurboHybrid {
 	const string ERROR_K = L"Do not press K!!!\n";

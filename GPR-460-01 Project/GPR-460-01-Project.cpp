@@ -6,21 +6,27 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif // ! __EMSCRIPTEN__
-#include <stdlib.h>
 
+#include <stdlib.h>
 #include <iostream>
 #include <SDL.h>
+
 // Add your System.h include file here
 #include "./source/headers/System.h"
+
+//inculde game files
+#include "./source/headers/GameObject.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
+#include "source/headers/InputSystem.h"
 
 struct EngineState
 {
     SDL_Renderer* renderer;
     TurboHybrid::System* system;
+    TurboHybrid::InputSystem* input;
 
     Uint32 frameStart;
     bool quit;
@@ -30,6 +36,7 @@ struct EngineState
 void runMainLoop(EngineState* engine);
 void frameStep(void* arg);
 Uint32 GetTicks();
+TurboHybrid::GameObject* player;
 
 int main(int argc, char* argv[])
 {
@@ -40,8 +47,11 @@ int main(int argc, char* argv[])
 
     TurboHybrid::System* system = TurboHybrid::System::Create();
     system->Init();
+    TurboHybrid::InputSystem::InitInstance();
+    TurboHybrid::InputSystem* input = TurboHybrid::InputSystem::GetInputSystem();
 
-    int* leak = DBG_NEW int[4096];
+    player = new TurboHybrid::GameObject();
+    player->CreateRenderer();
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -54,6 +64,7 @@ int main(int argc, char* argv[])
     engine.frame = 0;
     engine.frameStart = GetTicks();
     engine.system = system;
+    engine.input = input;
 
     runMainLoop(&engine);
 
@@ -63,7 +74,10 @@ int main(int argc, char* argv[])
 
     system->Shutdown();
 
+
+    delete player;
     delete system;
+    delete input;
     return 0;
 }
 
@@ -104,6 +118,8 @@ void frameStep(void* arg)
     engine->frame++;
     engine->frameStart = now;
 
+    player->Update();
+
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
@@ -138,11 +154,14 @@ void frameStep(void* arg)
         50
     };
 
+    //clear screen
     SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-
     SDL_RenderClear(engine->renderer);
-    SDL_SetRenderDrawColor(engine->renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(engine->renderer, &r);
+
+    //Render rect
+    player->Draw(engine->renderer);
+
+    //Prep next frame?
     SDL_RenderPresent(engine->renderer);
 }
 

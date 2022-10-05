@@ -2,8 +2,6 @@
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 
-#include <SDL.h>
-
 namespace TurboHybrid {
 	const string ERROR_K = "Do not press K";
 	const string LOG_ERROR_K = "Error User pressed k";

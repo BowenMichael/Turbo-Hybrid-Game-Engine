@@ -16,14 +16,32 @@
     <Filter Include="Header Files\System">
       <UniqueIdentifier>{9d6295da-6a01-48b7-9c95-cbeb5b668687}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\System\Win32">
-      <UniqueIdentifier>{4209d38f-889b-4084-b15b-84152e9776a3}</UniqueIdentifier>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{4c0ac567-2744-4cfd-86ed-443cce858cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects">
+      <UniqueIdentifier>{3aa4e272-3a8e-4e3e-82ea-317c284a796f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\System\Emscripten">
       <UniqueIdentifier>{cfe69b26-5b56-4696-baf9-f15a7a40092c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\System">
-      <UniqueIdentifier>{4c0ac567-2744-4cfd-86ed-443cce858cbc}</UniqueIdentifier>
+    <Filter Include="Header Files\System\Win32">
+      <UniqueIdentifier>{4209d38f-889b-4084-b15b-84152e9776a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{fcb9c0c3-a038-4ce2-979a-6ca119c85206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{bf16db66-ce1b-4d2a-a5f5-90656c256871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{3118708c-5637-4cd2-b8ae-c97c07c5134a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Util">
+      <UniqueIdentifier>{7697a385-966d-4ccb-a798-7db45483ab5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\System\InputSystem">
+      <UniqueIdentifier>{64c06b47-3dfc-4d6f-a360-b6e1715d3944}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +53,27 @@
     </ClCompile>
     <ClCompile Include="source\emscripten\System_Emscripten.cpp">
       <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GameObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Components\RectangleRenderer.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Components\RectangleCollider.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Components\PlayerController.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Components\ColliderColorChanger.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Components\Transform.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\InputSystem.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +88,39 @@
     </ClInclude>
     <ClInclude Include="source\windows\headers\System_Win32.h">
       <Filter>Header Files\System\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\GameObject.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Components\RectangleRenderer.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Components\RectangleCollider.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Components\PlayerController.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Components\ColliderColorChanger.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Components\Transform.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Util\Vector3.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Util\Rect.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Util\Color.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Components\Component_Common.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\InputSystem.h">
+      <Filter>Header Files\System\InputSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
