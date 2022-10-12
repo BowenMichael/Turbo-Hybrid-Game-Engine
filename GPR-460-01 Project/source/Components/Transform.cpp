@@ -22,3 +22,9 @@ TurboHybrid::Vector3 TurboHybrid::Transform::SetLocation(const float& x, const f
 	location.z = z;
 	return location;
 }
+
+void TurboHybrid::Transform::TranslateRect(const Vector3& dir)
+{
+	location += dir;
+}
+

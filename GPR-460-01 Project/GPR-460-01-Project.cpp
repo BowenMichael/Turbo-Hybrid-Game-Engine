@@ -21,6 +21,17 @@
 #include <emscripten.h>
 #endif
 #include "source/headers/InputSystem.h"
+#include "source/headers/Components/RectangleCollider.h"
+
+
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
+
 
 struct EngineState
 {
@@ -37,6 +48,7 @@ void runMainLoop(EngineState* engine);
 void frameStep(void* arg);
 Uint32 GetTicks();
 TurboHybrid::GameObject* player;
+TurboHybrid::GameObject* collider;
 
 int main(int argc, char* argv[])
 {
@@ -47,11 +59,21 @@ int main(int argc, char* argv[])
 
     TurboHybrid::System* system = TurboHybrid::System::Create();
     system->Init();
+
     TurboHybrid::InputSystem::InitInstance();
     TurboHybrid::InputSystem* input = TurboHybrid::InputSystem::GetInputSystem();
 
-    player = new TurboHybrid::GameObject();
+    player = DBG_NEW TurboHybrid::GameObject();
     player->CreateRenderer();
+    player->CreatePlayerController();
+    player->CreateCollider();
+
+    collider = DBG_NEW TurboHybrid::GameObject();
+    collider->CreateRenderer();
+    TurboHybrid::RectangleCollider* cCollider = collider->CreateCollider();
+    cCollider->SetOnCollision([]() {std::cout << "collided\n"; });
+    collider->GetTransform()->SetLocation(110, 0, 0);
+
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -72,12 +94,17 @@ int main(int argc, char* argv[])
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    system->Shutdown();
 
-
+   
     delete player;
+    delete collider;
+
+    TurboHybrid::InputSystem::DeleteInstance();
+    system->Shutdown();
     delete system;
-    delete input;
+
+
+    
     return 0;
 }
 
@@ -118,7 +145,8 @@ void frameStep(void* arg)
     engine->frame++;
     engine->frameStart = now;
 
-    player->Update();
+    player->Update(0);
+    collider->CheckCollision(player);
 
     while (SDL_PollEvent(&event))
     {
@@ -145,7 +173,7 @@ void frameStep(void* arg)
         }
     }
 
-    int x = (SDL_sinf(engine->frame / 100.0f) * 100.0f) + 200;
+    int x = (SDL_sinf(engine->frame / 100.0f) * 100.0f) + 200.0;
 
     SDL_Rect r = {
         x,
@@ -160,6 +188,7 @@ void frameStep(void* arg)
 
     //Render rect
     player->Draw(engine->renderer);
+    collider->Draw(engine->renderer);
 
     //Prep next frame?
     SDL_RenderPresent(engine->renderer);

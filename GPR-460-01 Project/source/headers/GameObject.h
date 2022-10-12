@@ -1,13 +1,14 @@
 #pragma once
 #include <SDL.h>
-#include "Components/ColliderColorChanger.h"
-#include "Components/PlayerController.h"
-#include "Components/RectangleCollider.h"
-#include "Components/RectangleRenderer.h"
 #include "Components/Transform.h"
 
 
 namespace TurboHybrid {
+
+	class RectangleRenderer;
+	class RectangleCollider;
+	class PlayerController;
+	class ColliderColorChanger;
 
 	class GameObject
 	{
@@ -20,8 +21,15 @@ namespace TurboHybrid {
 		PlayerController* CreatePlayerController();
 		ColliderColorChanger* CreateColliderColorChanger();
 
+		Transform* GetTransform() { return &transform; };
+		RectangleCollider* GetCollider() { return collider; };
+		RectangleRenderer* GetRenderer() { return renderer; };
+
+		void CheckCollision(GameObject* other);
+
+
 		void Draw(SDL_Renderer* sdlRenderer);
-		void Update();
+		void Update(const float& deltatime);
 	protected:
 		Transform transform;
 		RectangleRenderer* renderer;

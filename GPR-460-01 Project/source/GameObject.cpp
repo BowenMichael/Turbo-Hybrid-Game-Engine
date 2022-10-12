@@ -1,5 +1,11 @@
 #include "./headers/GameObject.h"
 #include <iostream>
+#include "../source/headers/System_Common.h"
+#include "../source/headers/Components/ColliderColorChanger.h"
+#include "../source/headers/Components/PlayerController.h"
+#include "../source/headers/Components/RectangleCollider.h"
+#include "../source/headers/Components/RectangleRenderer.h"
+#include "Components/ColliderColorChanger.cpp"
 
 TurboHybrid::GameObject::GameObject() : 
 	transform(),
@@ -22,8 +28,37 @@ TurboHybrid::GameObject::~GameObject()
 TurboHybrid::RectangleRenderer* TurboHybrid::GameObject::CreateRenderer()
 {
 	delete renderer;
-	renderer = new RectangleRenderer();
+	renderer = DBG_NEW RectangleRenderer();
 	return renderer;
+}
+
+TurboHybrid::RectangleCollider* TurboHybrid::GameObject::CreateCollider()
+{
+	delete collider;
+	collider = DBG_NEW RectangleCollider(this);
+	return collider;
+}
+
+TurboHybrid::PlayerController* TurboHybrid::GameObject::CreatePlayerController()
+{
+	delete player;
+	player = DBG_NEW TurboHybrid::PlayerController(this);
+	return player;
+}
+
+TurboHybrid::ColliderColorChanger* TurboHybrid::GameObject::CreateColliderColorChanger()
+{
+	delete colorChanger;
+	colorChanger = DBG_NEW TurboHybrid::ColliderColorChanger(this, Color());
+	return colorChanger;
+}
+
+
+
+void TurboHybrid::GameObject::CheckCollision(GameObject* other)
+{
+	if(collider && other->GetCollider())
+		collider->CheckCollision(other->GetCollider());
 }
 
 void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)
@@ -42,10 +77,11 @@ void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)
 	SDL_RenderFillRect(sdlRenderer, &r);
 }
 
-void TurboHybrid::GameObject::Update()
+void TurboHybrid::GameObject::Update(const float& deltatime)
 {
-	const Uint8* keystate = SDL_GetKeyboardState(NULL);
+	if(player)
+		player->update(deltatime);
 
-	if(keystate[SDL_SCANCODE_W])
-		std::cout << "w pressed\n";
+	if (colorChanger)
+		colorChanger->Update(deltatime);
 }

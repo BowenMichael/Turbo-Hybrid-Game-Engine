@@ -6,8 +6,10 @@ TurboHybrid::System* TurboHybrid::System::Create() {
 
 void TurboHybrid::System_Win32::Init()
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+
+	_CrtMemCheckpoint(&memState);
 
 	if (!AllocConsole()) {
 		ShowError(L"Failed to alloc console");
@@ -23,6 +25,7 @@ void TurboHybrid::System_Win32::Init()
 
 void TurboHybrid::System_Win32::Shutdown()
 {
+	_CrtMemDumpAllObjectsSince(&memState);
 	CloseHandle(mhFile);
 }
 
