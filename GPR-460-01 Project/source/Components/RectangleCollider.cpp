@@ -26,11 +26,6 @@ bool TurboHybrid::RectangleCollider::CheckCollision(RectangleCollider* other)
 		&& extentsPosition.y >= otherPosition.y
 		&& position.y <= otherExtentsPosition.y
 
-		/*
-		|| extentsPosition.y >= otherPosition.y && extentsPosition.y <= otherExtentsPosition.y*/
-		//|| position.y >= otherPosition.y && position.y <= otherExtentsPosition.y 
-		//|| extentsPosition.x >= otherPosition.x && extentsPosition.x <= otherExtentsPosition.x 
-		//&& extentsPosition.y >= otherPosition.y && extentsPosition.y <= otherExtentsPosition.y
 		) {
 		//colliding		
 		OnCollision();

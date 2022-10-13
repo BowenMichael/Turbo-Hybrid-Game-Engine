@@ -49,7 +49,7 @@ TurboHybrid::PlayerController* TurboHybrid::GameObject::CreatePlayerController()
 TurboHybrid::ColliderColorChanger* TurboHybrid::GameObject::CreateColliderColorChanger()
 {
 	delete colorChanger;
-	colorChanger = DBG_NEW TurboHybrid::ColliderColorChanger(this, Color());
+	colorChanger = DBG_NEW TurboHybrid::ColliderColorChanger(this, Color(0,1,0,1));
 	return colorChanger;
 }
 
@@ -72,7 +72,7 @@ void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)
 		rect.height
 	};
 
-	SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(color.r * 255), (Uint8)(color.r * 255), (Uint8)(color.r * 255), (Uint8)(color.r * SDL_ALPHA_OPAQUE));
+	SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(color.r * 255), (Uint8)(color.g * 255), (Uint8)(color.b * 255), (Uint8)(color.a * SDL_ALPHA_OPAQUE));
 	SDL_RenderDrawRect(sdlRenderer, &r);
 	SDL_RenderFillRect(sdlRenderer, &r);
 }

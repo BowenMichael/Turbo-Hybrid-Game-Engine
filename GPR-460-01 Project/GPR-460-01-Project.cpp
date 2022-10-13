@@ -70,6 +70,7 @@ int main(int argc, char* argv[])
 
     collider = DBG_NEW TurboHybrid::GameObject();
     collider->CreateRenderer();
+    collider->CreateColliderColorChanger();
     TurboHybrid::RectangleCollider* cCollider = collider->CreateCollider();
     cCollider->SetOnCollision([]() {std::cout << "collided\n"; });
     collider->GetTransform()->SetLocation(110, 0, 0);
@@ -145,8 +146,10 @@ void frameStep(void* arg)
     engine->frame++;
     engine->frameStart = now;
 
-    player->Update(0);
     collider->CheckCollision(player);
+
+    player->Update(0);
+    collider->Update(0);
 
     while (SDL_PollEvent(&event))
     {
