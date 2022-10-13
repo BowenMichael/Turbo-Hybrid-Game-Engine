@@ -66,9 +66,6 @@
     <ClCompile Include="source\Components\PlayerController.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="source\Components\ColliderColorChanger.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="source\Components\Transform.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
