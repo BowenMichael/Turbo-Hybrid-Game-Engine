@@ -20,7 +20,6 @@
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
-#include "source/headers/InputSystem.h"
 #include "source/headers/Components/RectangleCollider.h"
 #include "source/headers/Components/RectangleRenderer.h"
 
@@ -39,7 +38,6 @@ struct EngineState
     SDL_Renderer* renderer;
     SDL_Window* window;
     TurboHybrid::System* system;
-    TurboHybrid::InputSystem* input;
 
     Uint32 frameStart;
     bool quit;
@@ -63,9 +61,6 @@ int main(int argc, char* argv[])
 
     TurboHybrid::System* system = TurboHybrid::System::Create();
     system->Init();
-
-    TurboHybrid::InputSystem::InitInstance();
-    TurboHybrid::InputSystem* input = TurboHybrid::InputSystem::GetInputSystem();
 
     //Player init
     player = DBG_NEW TurboHybrid::GameObject();
@@ -101,7 +96,6 @@ int main(int argc, char* argv[])
     engine.frame = 0;
     engine.frameStart = GetTicks();
     engine.system = system;
-    engine.input = input;
     engine.window = window;
 
     runMainLoop(&engine);
@@ -114,8 +108,6 @@ int main(int argc, char* argv[])
    
     delete player;
     delete collider;
-
-    TurboHybrid::InputSystem::DeleteInstance();
     system->Shutdown();
     delete system;
 

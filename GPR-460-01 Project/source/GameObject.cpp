@@ -66,10 +66,10 @@ void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)
 	Rect rect = renderer->GetRect();
 	Color color = renderer->GetColor();
 	SDL_Rect r = {
-		transform.GetLocation().x + rect.width * .5f,
-		transform.GetLocation().y + rect.height * .5f,
-		rect.width,
-		rect.height
+		static_cast<int>(transform.GetLocation().x + rect.width * .5f),
+		static_cast<int>(transform.GetLocation().y + rect.height * .5f),
+		static_cast<int>(rect.width),
+		static_cast<int>(rect.height)
 	};
 
 	SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(color.r * 255), (Uint8)(color.g * 255), (Uint8)(color.b * 255), (Uint8)(color.a * SDL_ALPHA_OPAQUE));
