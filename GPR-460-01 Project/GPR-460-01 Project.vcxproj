@@ -131,7 +131,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01-Project.cpp" />
-    <ClCompile Include="source\Components\ColliderColorChanger.cpp" />
     <ClCompile Include="source\Components\PlayerController.cpp" />
     <ClCompile Include="source\Components\RectangleCollider.cpp" />
     <ClCompile Include="source\Components\RectangleRenderer.cpp" />

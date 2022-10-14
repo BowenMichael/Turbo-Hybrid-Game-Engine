@@ -20,6 +20,11 @@ void TurboHybrid::InputSystem::DeleteInstance()
 	self = nullptr;
 }
 
+//bool TurboHybrid::InputSystem::GetKey(const Uint8& key)
+//{
+//	const Uint8* keystate = SDL_GetKeyboardState(NULL);
+//}
+
 TurboHybrid::InputSystem::InputSystem()
 {
 }

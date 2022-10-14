@@ -7,6 +7,7 @@
 #else
 #define DBG_NEW new
 #endif
+
 #include <string>
 #include <SDL.h>
 #ifdef __EMSCRIPTEN__

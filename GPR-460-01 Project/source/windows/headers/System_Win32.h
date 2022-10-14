@@ -20,6 +20,7 @@ namespace TurboHybrid {
 	protected:
 	private:
 		HANDLE mhFile;
+		_CrtMemState memState;
 	};
 
 }

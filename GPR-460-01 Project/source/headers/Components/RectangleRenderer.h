@@ -3,6 +3,7 @@
 
 #include "../Util/Color.h"
 #include "../Util/Rect.h"
+#include "../Util/Vector3.h"
 
 namespace TurboHybrid {
 	class RectangleRenderer
@@ -18,6 +19,8 @@ namespace TurboHybrid {
 
 		Rect SetRect(const Rect& rect);
 		Color SetColor(const Color& color);
+
+
 	protected:
 		Rect rect;
 		Color color;
