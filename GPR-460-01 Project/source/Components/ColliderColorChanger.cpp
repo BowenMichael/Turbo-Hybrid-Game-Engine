@@ -6,7 +6,8 @@
 TurboHybrid::ColliderColorChanger::ColliderColorChanger(GameObject* gameobject, const Color& color)
 	:
 	gameobject(gameobject),
-	collidedColor(color)
+	collidedColor(color),
+	originalColor(gameobject->GetRenderer()->GetColor())
 {
 }
 
@@ -16,6 +17,6 @@ void TurboHybrid::ColliderColorChanger::Update(const float& deltatime)
 		gameobject->GetRenderer()->SetColor(collidedColor);
 	}
 	else {
-		gameobject->GetRenderer()->SetColor(Color());
+		gameobject->GetRenderer()->SetColor(originalColor);
 	}
 }

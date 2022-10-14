@@ -12,6 +12,7 @@ namespace TurboHybrid {
 
 	private:
 		Color collidedColor;
+		Color originalColor;
 		GameObject* gameobject;
 	};
 }

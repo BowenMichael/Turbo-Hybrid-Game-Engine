@@ -22,6 +22,7 @@
 #endif
 #include "source/headers/InputSystem.h"
 #include "source/headers/Components/RectangleCollider.h"
+#include "source/headers/Components/RectangleRenderer.h"
 
 
 #ifdef _DEBUG
@@ -36,12 +37,14 @@
 struct EngineState
 {
     SDL_Renderer* renderer;
+    SDL_Window* window;
     TurboHybrid::System* system;
     TurboHybrid::InputSystem* input;
 
     Uint32 frameStart;
     bool quit;
     int frame;
+
 };
 
 void runMainLoop(EngineState* engine);
@@ -49,6 +52,7 @@ void frameStep(void* arg);
 Uint32 GetTicks();
 TurboHybrid::GameObject* player;
 TurboHybrid::GameObject* collider;
+TurboHybrid::GameObject* background;
 
 int main(int argc, char* argv[])
 {
@@ -63,18 +67,28 @@ int main(int argc, char* argv[])
     TurboHybrid::InputSystem::InitInstance();
     TurboHybrid::InputSystem* input = TurboHybrid::InputSystem::GetInputSystem();
 
+    //Player init
     player = DBG_NEW TurboHybrid::GameObject();
     player->CreateRenderer();
     player->CreatePlayerController();
-    player->CreateCollider();
+    player->CreateColliderColorChanger();
+    TurboHybrid::RectangleCollider* cPlayer = player->CreateCollider();
+    cPlayer->SetOnCollision([]() {std::cout << "Player Collided\n"; });
 
+    //Collider init
     collider = DBG_NEW TurboHybrid::GameObject();
     collider->CreateRenderer();
+    TurboHybrid::RectangleRenderer* colliderRect = collider->CreateRenderer();
+    colliderRect->SetColor(Color(1, 0, 0, 1));
     collider->CreateColliderColorChanger();
     TurboHybrid::RectangleCollider* cCollider = collider->CreateCollider();
-    cCollider->SetOnCollision([]() {std::cout << "collided\n"; });
+    cCollider->SetOnCollision([]() {std::cout << "Collider Collided\n"; });
     collider->GetTransform()->SetLocation(110, 0, 0);
 
+    //background init
+    background = DBG_NEW TurboHybrid::GameObject();
+
+   
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -88,6 +102,7 @@ int main(int argc, char* argv[])
     engine.frameStart = GetTicks();
     engine.system = system;
     engine.input = input;
+    engine.window = window;
 
     runMainLoop(&engine);
 
@@ -138,6 +153,7 @@ void runMainLoop(EngineState* engine)
 
 void frameStep(void* arg)
 {
+    
     EngineState* engine = (EngineState*)arg;
     SDL_Event event;
 
@@ -147,6 +163,7 @@ void frameStep(void* arg)
     engine->frameStart = now;
 
     collider->CheckCollision(player);
+    player->CheckCollision(collider);
 
     player->Update(0);
     collider->Update(0);
@@ -178,20 +195,27 @@ void frameStep(void* arg)
 
     int x = (SDL_sinf(engine->frame / 100.0f) * 100.0f) + 200.0;
 
-    SDL_Rect r = {
-        x,
-        100,
-        50,
-        50
-    };
+    SDL_Rect r{};
 
     //clear screen
     SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(engine->renderer);
 
+    //Draw Background
+    TurboHybrid::RectangleRenderer* backgroundRect = background->CreateRenderer();
+    SDL_GetDisplayBounds(0, &r);
+    SDL_GetWindowSize(engine->window, &r.w, &r.h);
+    backgroundRect->SetRect(Rect(r.w, r.h));
+    background->GetTransform()->SetLocation(r.w * -.5f, r.h * -.5f, 0);
+    backgroundRect->SetColor(Color(.25f, .25f, .25f, 1));
+    background->Draw(engine->renderer);
+
     //Render rect
     player->Draw(engine->renderer);
     collider->Draw(engine->renderer);
+    
+
+    
 
     //Prep next frame?
     SDL_RenderPresent(engine->renderer);
