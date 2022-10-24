@@ -1,6 +1,11 @@
-#include "../source/headers/Components/PlayerController.h"
-#include "../source/headers/GameObject.h"
+#include "headers/Components/PlayerController.h"
+#include "headers/GameObject.h"
 #include <SDL.h>
+
+TurboHybrid::PlayerController::PlayerController()
+	:gameObject(nullptr)
+{
+}
 
 TurboHybrid::PlayerController::PlayerController(GameObject* gameobject)
 	:gameObject(gameobject)

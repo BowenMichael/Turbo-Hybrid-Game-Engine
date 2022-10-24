@@ -12,16 +12,17 @@
 #include <SDL.h>
 
 // Add your System.h include file here
-#include "./source/headers/System.h"
+#include "headers/System.h"
 
 //inculde game files
-#include "./source/headers/GameObject.h"
+#include "headers/GameObject.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
-#include "source/headers/Components/RectangleCollider.h"
-#include "source/headers/Components/RectangleRenderer.h"
+#include "headers/Components/RectangleCollider.h"
+#include "headers/Components/RectangleRenderer.h"
+#include "headers/Components/Component_System.h"
 
 
 #ifdef _DEBUG
@@ -32,9 +33,9 @@
 #define DBG_NEW new
 #endif
 
-
 struct EngineState
 {
+    SDL_Rect viewport{};
     SDL_Renderer* renderer;
     SDL_Window* window;
     TurboHybrid::System* system;
@@ -62,26 +63,9 @@ int main(int argc, char* argv[])
     TurboHybrid::System* system = TurboHybrid::System::Create();
     system->Init();
 
-    //Player init
-    player = DBG_NEW TurboHybrid::GameObject();
-    player->CreateRenderer();
-    player->CreatePlayerController();
-    player->CreateColliderColorChanger();
-    TurboHybrid::RectangleCollider* cPlayer = player->CreateCollider();
-    cPlayer->SetOnCollision([]() {std::cout << "Player Collided\n"; });
+    TurboHybrid::ComponentSystem::InitInstance();
+    TurboHybrid::ComponentSystem* world = TurboHybrid::ComponentSystem::GetComponentSystem();
 
-    //Collider init
-    collider = DBG_NEW TurboHybrid::GameObject();
-    collider->CreateRenderer();
-    TurboHybrid::RectangleRenderer* colliderRect = collider->CreateRenderer();
-    colliderRect->SetColor(Color(1, 0, 0, 1));
-    collider->CreateColliderColorChanger();
-    TurboHybrid::RectangleCollider* cCollider = collider->CreateCollider();
-    cCollider->SetOnCollision([]() {std::cout << "Collider Collided\n"; });
-    collider->GetTransform()->SetLocation(110, 0, 0);
-
-    //background init
-    background = DBG_NEW TurboHybrid::GameObject();
 
    
 
@@ -97,6 +81,50 @@ int main(int argc, char* argv[])
     engine.frameStart = GetTicks();
     engine.system = system;
     engine.window = window;
+    engine.viewport = {};
+
+    //Player init
+    TurboHybrid::RectangleCollider* cPlayer = world->allocateRectangleCollider();
+    cPlayer->SetOnCollision([]() {std::cout << "Player Collided\n"; });
+    player = DBG_NEW TurboHybrid::GameObject(
+        world->allocateTransform(), 
+        world->allocateRectangleRenderer(), 
+        cPlayer, 
+        world->allocatePlayerController(), 
+        world->allocateCollorChanger()
+    );
+
+
+
+    //Collider init
+    TurboHybrid::RectangleRenderer* colliderRect = world->allocateRectangleRenderer();
+    colliderRect->SetColor(Color(1, 0, 0, 1));
+    TurboHybrid::Transform* colliderTransform = world->allocateTransform();
+    colliderTransform->SetLocation(110, 0, 0);
+    collider = DBG_NEW TurboHybrid::GameObject(colliderTransform, colliderRect, world->allocateRectangleCollider(), nullptr, world->allocateCollorChanger());
+    /*collider->CreateRenderer();
+    TurboHybrid::RectangleRenderer* colliderRect = collider->CreateRenderer();
+    colliderRect->SetColor(Color(1, 0, 0, 1));
+    collider->CreateColliderColorChanger();
+    TurboHybrid::RectangleCollider* cCollider = collider->CreateCollider();
+    cCollider->SetOnCollision([]() {std::cout << "Collider Collided\n"; });
+    collider->GetTransform()->SetLocation(110, 0, 0);*/
+
+    /*
+        Background init
+    */
+    //Get Screen Size
+    SDL_GetDisplayBounds(0, &engine.viewport);    
+    SDL_GetWindowSize(engine.window, &engine.viewport.w, &engine.viewport.h);
+    //Set up rectangle the size of the screen
+    TurboHybrid::RectangleRenderer* backgroundRect = world->allocateRectangleRenderer();
+    backgroundRect->SetColor(Color(.25f, .25f, .25f, 1));
+    backgroundRect->SetRect(Rect(engine.viewport.w, engine.viewport.h));
+    //set up transform in center of the screen
+    TurboHybrid::Transform* backgroundTransform = world->allocateTransform();
+    backgroundTransform->SetLocation(engine.viewport.w * -.5f, engine.viewport.h * -.5f, 0);
+    background = DBG_NEW TurboHybrid::GameObject(backgroundTransform, backgroundRect);
+
 
     runMainLoop(&engine);
 
@@ -108,6 +136,10 @@ int main(int argc, char* argv[])
    
     delete player;
     delete collider;
+    delete background;
+
+    TurboHybrid::ComponentSystem::DeleteInstance();
+
     system->Shutdown();
     delete system;
 
@@ -154,11 +186,7 @@ void frameStep(void* arg)
     engine->frame++;
     engine->frameStart = now;
 
-    collider->CheckCollision(player);
-    player->CheckCollision(collider);
-
-    player->Update(0);
-    collider->Update(0);
+    TurboHybrid::ComponentSystem::GetComponentSystem()->update(0);
 
     while (SDL_PollEvent(&event))
     {
@@ -187,19 +215,13 @@ void frameStep(void* arg)
 
     int x = (SDL_sinf(engine->frame / 100.0f) * 100.0f) + 200.0;
 
-    SDL_Rect r{};
+
 
     //clear screen
     SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(engine->renderer);
 
     //Draw Background
-    TurboHybrid::RectangleRenderer* backgroundRect = background->CreateRenderer();
-    SDL_GetDisplayBounds(0, &r);
-    SDL_GetWindowSize(engine->window, &r.w, &r.h);
-    backgroundRect->SetRect(Rect(r.w, r.h));
-    background->GetTransform()->SetLocation(r.w * -.5f, r.h * -.5f, 0);
-    backgroundRect->SetColor(Color(.25f, .25f, .25f, 1));
     background->Draw(engine->renderer);
 
     //Render rect

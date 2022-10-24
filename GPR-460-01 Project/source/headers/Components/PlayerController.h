@@ -5,11 +5,13 @@ namespace TurboHybrid {
 	class PlayerController
 	{
 	public:
+		PlayerController();
 		PlayerController(GameObject* gameobject);
 		~PlayerController();
 		void update(const float& deltatime);
-
-	private:
+		
 		GameObject* gameObject;
+	private:
+		
 	};
 }

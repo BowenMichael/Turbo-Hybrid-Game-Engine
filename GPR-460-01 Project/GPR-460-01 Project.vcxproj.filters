@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Header Files\System">
       <UniqueIdentifier>{9d6295da-6a01-48b7-9c95-cbeb5b668687}</UniqueIdentifier>
     </Filter>
@@ -43,15 +39,16 @@
     <Filter Include="Header Files\System\InputSystem">
       <UniqueIdentifier>{64c06b47-3dfc-4d6f-a360-b6e1715d3944}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01-Project.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\windows\System_Win32.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\emscripten\System_Emscripten.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
     <ClCompile Include="source\GameObject.cpp">
@@ -75,6 +72,9 @@
     <ClCompile Include="source\Components\ColliderColorChanger.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="source\Components\Component_System.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Headers\System_Common.h">
@@ -82,9 +82,6 @@
     </ClInclude>
     <ClInclude Include="source\headers\System.h">
       <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\emscripten\headers\System_Emscripten.h">
-      <Filter>Header Files\System\Emscripten</Filter>
     </ClInclude>
     <ClInclude Include="source\windows\headers\System_Win32.h">
       <Filter>Header Files\System\Win32</Filter>
@@ -121,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="source\headers\InputSystem.h">
       <Filter>Header Files\System\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Components\Component_System.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

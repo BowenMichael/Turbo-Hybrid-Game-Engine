@@ -1,9 +1,9 @@
 #pragma once
 #include "Component_Common.h"
 
-#include "../Util/Color.h"
-#include "../Util/Rect.h"
-#include "../Util/Vector3.h"
+#include "headers/Util/Color.h"
+#include "headers/Util/Rect.h"
+#include "headers/Util/Vector3.h"
 
 namespace TurboHybrid {
 	class RectangleRenderer

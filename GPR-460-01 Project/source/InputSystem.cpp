@@ -1,4 +1,4 @@
-#include "../source/headers/InputSystem.h"
+#include "headers/InputSystem.h"
 
 TurboHybrid::InputSystem* TurboHybrid::InputSystem::self = nullptr;
 

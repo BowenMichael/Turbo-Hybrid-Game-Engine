@@ -1,1 +1,1 @@
-cmd /c call ../../../emsdk/emcmdprompt.bat
+cmd /c call ..\..\emsdk\emcmdprompt.bat

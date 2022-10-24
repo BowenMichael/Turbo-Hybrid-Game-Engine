@@ -1,9 +1,18 @@
-#include "../source/headers/Components/RectangleCollider.h"
-#include "../source/headers/GameObject.h"
-#include "../source/headers/Components/RectangleRenderer.h"
+#include "headers/Components/RectangleCollider.h"
+#include "headers/GameObject.h"
+#include "headers/Components/RectangleRenderer.h"
 
 TurboHybrid::RectangleCollider::RectangleCollider(GameObject* gm)
-	: gameObject(gm)
+	: gameObject(gm),
+	isColliding(false),
+	OnCollision(nullptr)
+{
+}
+
+TurboHybrid::RectangleCollider::RectangleCollider() :
+	gameObject(nullptr),
+	isColliding(false),
+	OnCollision(nullptr)
 {
 }
 
@@ -28,7 +37,8 @@ bool TurboHybrid::RectangleCollider::CheckCollision(RectangleCollider* other)
 
 		) {
 		//colliding		
-		OnCollision();
+		if(OnCollision)
+			OnCollision();
 		isColliding = true;
 		return true;
 	}

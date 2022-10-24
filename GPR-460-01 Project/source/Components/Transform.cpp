@@ -1,4 +1,4 @@
-#include "../headers/Components/Transform.h"
+#include "headers/Components/Transform.h"
 
 TurboHybrid::Transform::Transform()
 {

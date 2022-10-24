@@ -1,4 +1,4 @@
-#include "../source/headers/Components/RectangleRenderer.h"
+#include "headers/Components/RectangleRenderer.h"
 
 TurboHybrid::RectangleRenderer::RectangleRenderer()
 	: rect(),

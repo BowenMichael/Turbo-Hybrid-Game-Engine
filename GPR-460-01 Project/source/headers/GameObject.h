@@ -14,14 +14,15 @@ namespace TurboHybrid {
 	{
 	public:
 		GameObject();
+		GameObject(Transform* transform = nullptr,  RectangleRenderer* rectRend = nullptr, RectangleCollider* rectCol = nullptr, PlayerController* plc = nullptr, ColliderColorChanger* colorChanger = nullptr);
 		~GameObject();
 		
-		RectangleRenderer* CreateRenderer();
-		RectangleCollider* CreateCollider();
-		PlayerController* CreatePlayerController();
-		ColliderColorChanger* CreateColliderColorChanger();
+		//RectangleRenderer* CreateRenderer();
+		//RectangleCollider* CreateCollider();
+		//PlayerController* CreatePlayerController();
+		//ColliderColorChanger* CreateColliderColorChanger();
 
-		Transform* GetTransform() { return &transform; };
+		Transform* GetTransform() { return transform; };
 		RectangleCollider* GetCollider() { return collider; };
 		RectangleRenderer* GetRenderer() { return renderer; };
 
@@ -29,9 +30,8 @@ namespace TurboHybrid {
 
 
 		void Draw(SDL_Renderer* sdlRenderer);
-		void Update(const float& deltatime);
 	protected:
-		Transform transform;
+		Transform* transform;
 		RectangleRenderer* renderer;
 		RectangleCollider* collider;
 		PlayerController* player;
