@@ -28,7 +28,6 @@ namespace TurboHybrid {
 
 		void CheckCollision(GameObject* other);
 
-
 		void Draw(SDL_Renderer* sdlRenderer);
 	protected:
 		Transform* transform;

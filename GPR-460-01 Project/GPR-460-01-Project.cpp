@@ -83,7 +83,9 @@ int main(int argc, char* argv[])
     engine.window = window;
     engine.viewport = {};
 
-    //Player init
+    /*
+        Player init
+    */
     TurboHybrid::RectangleCollider* cPlayer = world->allocateRectangleCollider();
     cPlayer->SetOnCollision([]() {std::cout << "Player Collided\n"; });
     player = DBG_NEW TurboHybrid::GameObject(
@@ -96,12 +98,15 @@ int main(int argc, char* argv[])
 
 
 
-    //Collider init
+    /*
+        Collider init
+    */
     TurboHybrid::RectangleRenderer* colliderRect = world->allocateRectangleRenderer();
     colliderRect->SetColor(Color(1, 0, 0, 1));
     TurboHybrid::Transform* colliderTransform = world->allocateTransform();
     colliderTransform->SetLocation(110, 0, 0);
     collider = DBG_NEW TurboHybrid::GameObject(colliderTransform, colliderRect, world->allocateRectangleCollider(), nullptr, world->allocateCollorChanger());
+    //Old init
     /*collider->CreateRenderer();
     TurboHybrid::RectangleRenderer* colliderRect = collider->CreateRenderer();
     colliderRect->SetColor(Color(1, 0, 0, 1));
@@ -125,15 +130,12 @@ int main(int argc, char* argv[])
     backgroundTransform->SetLocation(engine.viewport.w * -.5f, engine.viewport.h * -.5f, 0);
     background = DBG_NEW TurboHybrid::GameObject(backgroundTransform, backgroundRect);
 
-
     runMainLoop(&engine);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-
-   
     delete player;
     delete collider;
     delete background;
@@ -177,7 +179,6 @@ void runMainLoop(EngineState* engine)
 
 void frameStep(void* arg)
 {
-    
     EngineState* engine = (EngineState*)arg;
     SDL_Event event;
 
@@ -214,8 +215,6 @@ void frameStep(void* arg)
     }
 
     int x = (SDL_sinf(engine->frame / 100.0f) * 100.0f) + 200.0;
-
-
 
     //clear screen
     SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
