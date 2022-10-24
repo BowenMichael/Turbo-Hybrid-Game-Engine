@@ -6,6 +6,7 @@
 #include "headers/Util/Vector3.h"
 
 namespace TurboHybrid {
+	class GameObject;
 	class RectangleRenderer
 	{
 	public:
@@ -20,10 +21,11 @@ namespace TurboHybrid {
 		Rect SetRect(const Rect& rect);
 		Color SetColor(const Color& color);
 
-
+		GameObject* gameObject;
 	protected:
 		Rect rect;
 		Color color;
+		
 	};
 }
 

@@ -31,6 +31,8 @@ TurboHybrid::GameObject::GameObject(Transform* transform, RectangleRenderer* rec
 		this->colorChanger->gameobject = this;
 	if(player)
 		player->gameObject = this;
+	if (renderer)
+		renderer->gameObject = this;
 }
 
 TurboHybrid::GameObject::~GameObject()

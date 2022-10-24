@@ -1,4 +1,6 @@
 #include "headers/Components/Component_System.h" 
+#include "headers/GameObject.h"
+#include "headers/System_Common.h"
 
 TurboHybrid::ComponentSystem* TurboHybrid::ComponentSystem::self = nullptr;
 TurboHybrid::Components TurboHybrid::ComponentSystem::mComponents = Components();
@@ -91,6 +93,35 @@ void TurboHybrid::ComponentSystem::update(const float& deltatime)
 
 		}
 	}
+}
+
+void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
+{
+	//I don't like doing this every fram but it works for now
+	SDL_Rect* rects = DBG_NEW SDL_Rect[mComponents.sNumOfRectangleRenderers];
+	for (int i = mComponents.sNumOfRectangleRenderers - 1; i >= 0; i--) {
+		RectangleRenderer* renderer = &mComponents.sRectangleRenderers[i];
+		Transform* transform = renderer->gameObject->GetTransform();
+		if (!transform)
+			continue;
+		Rect rect = renderer->GetRect();
+		Color color = renderer->GetColor();
+		SDL_Rect r = {
+			static_cast<int>(transform->GetLocation().x + rect.width * .5f),
+			static_cast<int>(transform->GetLocation().y + rect.height * .5f),
+			static_cast<int>(rect.width),
+			static_cast<int>(rect.height)
+		};
+		SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(color.r * 255), (Uint8)(color.g * 255), (Uint8)(color.b * 255), (Uint8)(color.a * SDL_ALPHA_OPAQUE));
+		rects[i] = r;
+	}
+	Uint8 r, g, b, a;
+	SDL_GetRenderDrawColor(sdlRenderer, &r, &g, &b, &a);
+	SDL_SetRenderDrawColor(sdlRenderer, 75, 75, 75, 255);
+	SDL_RenderFillRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
+	SDL_SetRenderDrawColor(sdlRenderer, r, g, b, a);
+	SDL_RenderDrawRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
+	
 }
 
 TurboHybrid::ComponentSystem::ComponentSystem()

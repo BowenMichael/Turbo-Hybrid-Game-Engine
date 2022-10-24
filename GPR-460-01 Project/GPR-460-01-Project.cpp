@@ -221,15 +221,7 @@ void frameStep(void* arg)
     SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(engine->renderer);
 
-    //Draw Background
-    background->Draw(engine->renderer);
-
-    //Render rect
-    player->Draw(engine->renderer);
-    collider->Draw(engine->renderer);
-    
-
-    
+    TurboHybrid::ComponentSystem::GetComponentSystem()->render(engine->renderer);
 
     //Prep next frame?
     SDL_RenderPresent(engine->renderer);

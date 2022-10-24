@@ -41,6 +41,7 @@ namespace TurboHybrid {
 		static Transform* allocateTransform();
 
 		static void update(const float& deltatime);
+		static void render(SDL_Renderer* sdlRenderer);
 	private:
 		ComponentSystem();
 		static Components mComponents;
