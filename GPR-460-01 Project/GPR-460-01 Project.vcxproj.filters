@@ -43,6 +43,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Allocators">
+      <UniqueIdentifier>{aaa36fe8-cdcd-4dbe-be64-a8c2206efe3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01-Project.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="source\Components\Component_System.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Allocators\StackAllocator.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="source\headers\Components\Component_System.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Allocators\StackAllocator.h">
+      <Filter>Header Files\Allocators</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

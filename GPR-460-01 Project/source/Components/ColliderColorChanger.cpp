@@ -30,4 +30,4 @@ TurboHybrid::ColliderColorChanger::ColliderColorChanger() :
 	gameobject(nullptr)
 
 {
-}
+}	

@@ -73,10 +73,12 @@ TurboHybrid::GameObject::~GameObject()
 
 
 
-void TurboHybrid::GameObject::CheckCollision(GameObject* other)
+bool TurboHybrid::GameObject::CheckCollision(GameObject* other)
 {
 	if(collider && other->GetCollider())
-		collider->CheckCollision(other->GetCollider());
+		return collider->CheckCollision(other->GetCollider());
+
+	return false;
 }
 
 void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)

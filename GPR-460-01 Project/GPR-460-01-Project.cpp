@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <SDL.h>
+#include <assert.h>
 
 // Add your System.h include file here
 #include "headers/System.h"
@@ -22,7 +23,9 @@
 #endif
 #include "headers/Components/RectangleCollider.h"
 #include "headers/Components/RectangleRenderer.h"
+#include <vector>
 #include "headers/Components/Component_System.h"
+#include <headers/Allocators/StackAllocator.h>
 
 
 #ifdef _DEBUG
@@ -39,6 +42,7 @@ struct EngineState
     SDL_Renderer* renderer;
     SDL_Window* window;
     TurboHybrid::System* system;
+    TurboHybrid::StackAllocator* stack;
 
     Uint32 frameStart;
     bool quit;
@@ -52,6 +56,9 @@ Uint32 GetTicks();
 TurboHybrid::GameObject* player;
 TurboHybrid::GameObject* collider;
 TurboHybrid::GameObject* background;
+const Uint32 numOfGameObjects = 100;
+TurboHybrid::GameObject* gameObjects[numOfGameObjects];
+
 
 int main(int argc, char* argv[])
 {
@@ -66,13 +73,12 @@ int main(int argc, char* argv[])
     TurboHybrid::ComponentSystem::InitInstance();
     TurboHybrid::ComponentSystem* world = TurboHybrid::ComponentSystem::GetComponentSystem();
 
-
-   
-
     SDL_Init(SDL_INIT_VIDEO);
 
     window = SDL_CreateWindow("SDL2 Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    char* buffer = DBG_NEW char[1024 * 1024 * 32];
+    TurboHybrid::StackAllocator* stack = DBG_NEW TurboHybrid::StackAllocator(1024 * 1024 * 32, buffer);
 
     EngineState engine;
     engine.quit = false;
@@ -82,15 +88,18 @@ int main(int argc, char* argv[])
     engine.system = system;
     engine.window = window;
     engine.viewport = {};
+    engine.stack = stack;
 
     /*
         Player init
     */
     TurboHybrid::RectangleCollider* cPlayer = world->allocateRectangleCollider();
-    cPlayer->SetOnCollision([]() {std::cout << "Player Collided\n"; });
+    TurboHybrid::RectangleRenderer* cPlrRenderer = world->allocateRectangleRenderer();
+    cPlrRenderer->SetRect(Rect(20, 20));
+    //cPlayer->SetOnCollision([]() {std::cout << "Player Collided\n"; });
     player = DBG_NEW TurboHybrid::GameObject(
         world->allocateTransform(), 
-        world->allocateRectangleRenderer(), 
+        cPlrRenderer,
         cPlayer, 
         world->allocatePlayerController(), 
         world->allocateCollorChanger()
@@ -98,22 +107,41 @@ int main(int argc, char* argv[])
 
 
 
-    /*
-        Collider init
-    */
-    TurboHybrid::RectangleRenderer* colliderRect = world->allocateRectangleRenderer();
-    colliderRect->SetColor(Color(1, 0, 0, 1));
-    TurboHybrid::Transform* colliderTransform = world->allocateTransform();
-    colliderTransform->SetLocation(110, 0, 0);
-    collider = DBG_NEW TurboHybrid::GameObject(colliderTransform, colliderRect, world->allocateRectangleCollider(), nullptr, world->allocateCollorChanger());
-    //Old init
-    /*collider->CreateRenderer();
-    TurboHybrid::RectangleRenderer* colliderRect = collider->CreateRenderer();
-    colliderRect->SetColor(Color(1, 0, 0, 1));
-    collider->CreateColliderColorChanger();
-    TurboHybrid::RectangleCollider* cCollider = collider->CreateCollider();
-    cCollider->SetOnCollision([]() {std::cout << "Collider Collided\n"; });
-    collider->GetTransform()->SetLocation(110, 0, 0);*/
+    ///*
+    //    Collider init
+    //*/
+    //TurboHybrid::RectangleRenderer* colliderRect = world->allocateRectangleRenderer();
+    //colliderRect->SetColor(Color(1, 0, 0, 1));
+    //TurboHybrid::Transform* colliderTransform = world->allocateTransform();
+    //colliderTransform->SetLocation(110, 0, 0);
+    //collider = DBG_NEW TurboHybrid::GameObject(colliderTransform, colliderRect, world->allocateRectangleCollider(), nullptr, world->allocateCollorChanger());
+    ////Old init
+    ///*collider->CreateRenderer();
+    //TurboHybrid::RectangleRenderer* colliderRect = collider->CreateRenderer();
+    //colliderRect->SetColor(Color(1, 0, 0, 1));
+    //collider->CreateColliderColorChanger();
+    //TurboHybrid::RectangleCollider* cCollider = collider->CreateCollider();
+    //cCollider->SetOnCollision([]() {std::cout << "Collider Collided\n"; });
+    //collider->GetTransform()->SetLocation(110, 0, 0);*/
+    int j = 0;
+    for (int i = 0; i < numOfGameObjects; i++)
+    {
+        TurboHybrid::GameObject* tmp = DBG_NEW TurboHybrid::GameObject(
+            world->allocateTransform(),
+            world->allocateRectangleRenderer(),
+            world->allocateRectangleCollider(),
+            nullptr,
+            world->allocateCollorChanger()
+        );
+        if (i % 10 == 0) {
+            j++;
+        }
+        tmp->GetTransform()->SetLocation(10 + ((i % 10) * 11), 10 + (j * 11), 0);
+        
+        tmp->GetRenderer()->SetRect(Rect(10 , 10 ));
+        tmp->GetRenderer()->SetColor(Color(1.0, 1.0, 0.0, 1.0));
+        gameObjects[i] = tmp;
+    }
 
     /*
         Background init
@@ -129,6 +157,8 @@ int main(int argc, char* argv[])
     TurboHybrid::Transform* backgroundTransform = world->allocateTransform();
     backgroundTransform->SetLocation(engine.viewport.w * -.5f, engine.viewport.h * -.5f, 0);
     background = DBG_NEW TurboHybrid::GameObject(backgroundTransform, backgroundRect);
+    
+
 
     runMainLoop(&engine);
 
@@ -139,14 +169,25 @@ int main(int argc, char* argv[])
     delete player;
     delete collider;
     delete background;
+    for (int i = 0; i < numOfGameObjects; i++) {
+        if (gameObjects[i] != nullptr) {
+            delete gameObjects[i];
+        }
+    }
+    
+    stack->clear();
+    delete stack;
 
     TurboHybrid::ComponentSystem::DeleteInstance();
 
     system->Shutdown();
     delete system;
 
-
     
+ 
+    
+    
+
     return 0;
 }
 
@@ -180,7 +221,32 @@ void runMainLoop(EngineState* engine)
 void frameStep(void* arg)
 {
     EngineState* engine = (EngineState*)arg;
+
     SDL_Event event;
+
+    //initalize vector
+    //vector<TurboHybrid::RectangleCollider> collidersVector();
+
+   // size_t collidersLength = 0;
+
+    
+    for (int i = 0; i < numOfGameObjects; i++) {
+        if (gameObjects[i] != nullptr && player->CheckCollision(gameObjects[i])) {
+            //Add Collider to vecto
+            // collidersLength++;
+        }
+
+    }
+
+    //TurboHybrid::RectangleCollider* colliders = engine->stack->alloc<TurboHybrid::RectangleCollider>(collidersVector.size());
+    
+    //for each collider vector allocate them into a given array put the colliders into the allocated stack
+    //*colliders[i] = *collidersVector[i]
+    
+    
+    //std::cout << "Colliders Colliding: " << collidersLength << "\n";
+
+    
 
     Uint32 now = GetTicks();
 
@@ -222,8 +288,13 @@ void frameStep(void* arg)
 
     TurboHybrid::ComponentSystem::GetComponentSystem()->render(engine->renderer);
 
+
     //Prep next frame?
     SDL_RenderPresent(engine->renderer);
+
+    engine->stack->clear();
+
+    
 }
 
 Uint32 GetTicks()

@@ -113,14 +113,17 @@ void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 			static_cast<int>(rect.height)
 		};
 		SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(color.r * 255), (Uint8)(color.g * 255), (Uint8)(color.b * 255), (Uint8)(color.a * SDL_ALPHA_OPAQUE));
+		SDL_RenderFillRect(sdlRenderer, &r);
+
 		rects[i] = r;
 	}
 	Uint8 r, g, b, a;
-	SDL_GetRenderDrawColor(sdlRenderer, &r, &g, &b, &a);
-	SDL_SetRenderDrawColor(sdlRenderer, 75, 75, 75, 255);
-	SDL_RenderFillRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
-	SDL_SetRenderDrawColor(sdlRenderer, r, g, b, a);
-	SDL_RenderDrawRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
+	//SDL_GetRenderDrawColor(sdlRenderer, &r, &g, &b, &a);
+	//SDL_SetRenderDrawColor(sdlRenderer, 75, 75, 75, 255);
+	////SDL_RenderFillRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
+	//SDL_SetRenderDrawColor(sdlRenderer, r, g, b, a);
+	//SDL_RenderDrawRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
+	delete rects;
 	
 }
 

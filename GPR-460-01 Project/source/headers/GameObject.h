@@ -14,8 +14,12 @@ namespace TurboHybrid {
 	{
 	public:
 		GameObject();
-		GameObject(Transform* transform = nullptr,  RectangleRenderer* rectRend = nullptr, RectangleCollider* rectCol = nullptr, PlayerController* plc = nullptr, ColliderColorChanger* colorChanger = nullptr);
-		~GameObject();
+		GameObject(Transform* transform = nullptr,  
+			RectangleRenderer* rectRend = nullptr, 
+			RectangleCollider* rectCol = nullptr, 
+			PlayerController* plc = nullptr, 
+			ColliderColorChanger* colorChanger = nullptr);
+		virtual ~GameObject();
 		
 		//RectangleRenderer* CreateRenderer();
 		//RectangleCollider* CreateCollider();
@@ -26,7 +30,7 @@ namespace TurboHybrid {
 		RectangleCollider* GetCollider() { return collider; };
 		RectangleRenderer* GetRenderer() { return renderer; };
 
-		void CheckCollision(GameObject* other);
+		bool CheckCollision(GameObject* other);
 
 		void Draw(SDL_Renderer* sdlRenderer);
 	protected:

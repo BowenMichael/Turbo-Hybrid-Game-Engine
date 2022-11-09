@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\source\;$(ProjectDir)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\michael.bowen\Desktop\GPR-460\GPR-460-01 Main Project\GPR-460-01 Project\source\Allocators;$(ProjectDir)\source\;$(ProjectDir)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01-Project.cpp" />
+    <ClCompile Include="source\Allocators\StackAllocator.cpp" />
     <ClCompile Include="source\Components\ColliderColorChanger.cpp" />
     <ClCompile Include="source\Components\Component_System.cpp" />
     <ClCompile Include="source\Components\PlayerController.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="source\windows\System_Win32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\headers\Allocators\StackAllocator.h" />
     <ClInclude Include="source\headers\Components\ColliderColorChanger.h" />
     <ClInclude Include="source\headers\Components\Component_Common.h" />
     <ClInclude Include="source\headers\Components\Component_System.h" />
