@@ -81,6 +81,11 @@ bool TurboHybrid::GameObject::CheckCollision(GameObject* other)
 	return false;
 }
 
+void TurboHybrid::GameObject::OnCollisionWithOther(RectangleCollider* other)
+{
+	renderer->SetColor(colorChanger->getCollidedColor());
+}
+
 void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)
 {
 	Rect rect = renderer->GetRect();

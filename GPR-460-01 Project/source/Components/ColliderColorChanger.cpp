@@ -4,6 +4,7 @@
 #include "headers/Components/RectangleCollider.h"
 #include "headers/Components/RectangleRenderer.h"
 
+
 TurboHybrid::ColliderColorChanger::ColliderColorChanger(GameObject* gameobject, const Color& color)
 	:
 	collidedColor(color),
@@ -15,12 +16,13 @@ TurboHybrid::ColliderColorChanger::ColliderColorChanger(GameObject* gameobject, 
 void TurboHybrid::ColliderColorChanger::Update(const float& deltatime)
 {
 	if (gameobject) {
-		if (gameobject->GetCollider()->GetIsColliding()) {
+		gameobject->GetRenderer()->SetColor(originalColor);
+		/*if (gameobject->GetCollider()->GetIsColliding()) {
 			gameobject->GetRenderer()->SetColor(collidedColor);
 		}
 		else {
-			gameobject->GetRenderer()->SetColor(originalColor);
-		}
+			
+		}*/
 	}
 }
 

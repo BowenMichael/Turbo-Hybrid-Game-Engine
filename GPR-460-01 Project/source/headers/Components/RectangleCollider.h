@@ -11,6 +11,7 @@ namespace TurboHybrid {
 		bool CheckCollision(RectangleCollider* other);
 		void SetOnCollision(void (*onCollisionCallback)());
 		bool GetIsColliding() { return isColliding; };
+		void OnCollisionWithOther(RectangleCollider* other);
 		GameObject* gameObject;
 
 	private:

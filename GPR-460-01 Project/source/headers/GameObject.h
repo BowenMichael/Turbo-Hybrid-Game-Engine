@@ -31,6 +31,7 @@ namespace TurboHybrid {
 		RectangleRenderer* GetRenderer() { return renderer; };
 
 		bool CheckCollision(GameObject* other);
+		void OnCollisionWithOther(RectangleCollider* other);
 
 		void Draw(SDL_Renderer* sdlRenderer);
 	protected:

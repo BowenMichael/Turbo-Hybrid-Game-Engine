@@ -56,7 +56,7 @@ Uint32 GetTicks();
 TurboHybrid::GameObject* player;
 TurboHybrid::GameObject* collider;
 TurboHybrid::GameObject* background;
-const Uint32 numOfGameObjects = 100;
+const Uint32 numOfGameObjects = 500;
 TurboHybrid::GameObject* gameObjects[numOfGameObjects];
 
 
@@ -95,14 +95,16 @@ int main(int argc, char* argv[])
     */
     TurboHybrid::RectangleCollider* cPlayer = world->allocateRectangleCollider();
     TurboHybrid::RectangleRenderer* cPlrRenderer = world->allocateRectangleRenderer();
-    cPlrRenderer->SetRect(Rect(20, 20));
+    cPlrRenderer->SetRect(Rect(50, 50));
+    TurboHybrid::ColliderColorChanger* cPlrColorChanger = world->allocateCollorChanger();
+    cPlrColorChanger->setCollidedColor(Color(1.0, 0.0, 1.0, 1.0));
     //cPlayer->SetOnCollision([]() {std::cout << "Player Collided\n"; });
     player = DBG_NEW TurboHybrid::GameObject(
         world->allocateTransform(), 
         cPlrRenderer,
         cPlayer, 
         world->allocatePlayerController(), 
-        world->allocateCollorChanger()
+        cPlrColorChanger
     );
 
 
@@ -124,21 +126,29 @@ int main(int argc, char* argv[])
     //cCollider->SetOnCollision([]() {std::cout << "Collider Collided\n"; });
     //collider->GetTransform()->SetLocation(110, 0, 0);*/
     int j = 0;
+    int cols = 25;
+    int rows = 25;
     for (int i = 0; i < numOfGameObjects; i++)
     {
+        TurboHybrid::ColliderColorChanger* tmpColorChanger = world->allocateCollorChanger();
+        tmpColorChanger->setCollidedColor(Color(.5, 1.0, .25, 1.0));
+        tmpColorChanger->setOriginalColor(Color(1.0, 1.0, 1.0, 1.0));
         TurboHybrid::GameObject* tmp = DBG_NEW TurboHybrid::GameObject(
             world->allocateTransform(),
             world->allocateRectangleRenderer(),
             world->allocateRectangleCollider(),
             nullptr,
-            world->allocateCollorChanger()
+            tmpColorChanger
         );
-        if (i % 10 == 0) {
+        if (i % rows == 0) {
             j++;
         }
-        tmp->GetTransform()->SetLocation(10 + ((i % 10) * 11), 10 + (j * 11), 0);
+        float width = 10;
+        float height = 10;
         
-        tmp->GetRenderer()->SetRect(Rect(10 , 10 ));
+        tmp->GetTransform()->SetLocation(width + ((i % cols) * (width+1)), height + (j * (height + 1)), 0);
+        
+        tmp->GetRenderer()->SetRect(Rect(width, height));
         tmp->GetRenderer()->SetColor(Color(1.0, 1.0, 0.0, 1.0));
         gameObjects[i] = tmp;
     }
@@ -224,29 +234,21 @@ void frameStep(void* arg)
 
     SDL_Event event;
 
-    //initalize vector
-    //vector<TurboHybrid::RectangleCollider> collidersVector();
+    //Allocate a block of memory inside my stack
+    TurboHybrid::RectangleCollider* colliders = engine->stack->alloc<TurboHybrid::RectangleCollider>(numOfGameObjects);
+    int numOfCollidingGameObjects = 0;
 
-   // size_t collidersLength = 0;
-
-    
+    //Iterate through all the gameobjects and put the data from those that collide with the player onto my allocated stack
     for (int i = 0; i < numOfGameObjects; i++) {
         if (gameObjects[i] != nullptr && player->CheckCollision(gameObjects[i])) {
-            //Add Collider to vecto
-            // collidersLength++;
+            colliders[numOfCollidingGameObjects] = *(gameObjects[i]->GetCollider());
+            numOfCollidingGameObjects++;
         }
-
     }
 
-    //TurboHybrid::RectangleCollider* colliders = engine->stack->alloc<TurboHybrid::RectangleCollider>(collidersVector.size());
-    
-    //for each collider vector allocate them into a given array put the colliders into the allocated stack
-    //*colliders[i] = *collidersVector[i]
-    
-    
-    //std::cout << "Colliders Colliding: " << collidersLength << "\n";
-
-    
+    //output number of colliding squares
+    if(numOfCollidingGameObjects > 0)
+        std::cout << "Colliders Colliding: " << numOfCollidingGameObjects << "\n";
 
     Uint32 now = GetTicks();
 
@@ -255,6 +257,15 @@ void frameStep(void* arg)
 
     TurboHybrid::ComponentSystem::GetComponentSystem()->update(0);
 
+    //call colliding colliders on collision function
+    for (int i = 0; i < (int)numOfCollidingGameObjects; i++) {
+        colliders[i].OnCollisionWithOther(player->GetCollider());
+    }
+
+    //allocate a block of memory based on the max number of keys i am allowed to press during a frame
+    int maxKeysPressed = 10;
+    int* keysPressed = engine->stack->alloc<int>(maxKeysPressed);;
+    int numOfKeysPressed = 0;
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
@@ -264,20 +275,22 @@ void frameStep(void* arg)
 
         if (event.type == SDL_KEYDOWN)
         {
-            std::cout << "Key pressed!\n";
-            if (event.key.keysym.sym == SDLK_k)
-            {
-                std::cout << "K pressed!\n";
-
-                // TODO: Add calls to ErrorMessage and LogToErrorFile here
-                engine->system->ShowError(TurboHybrid::ERROR_K);
-                engine->system->LogToErrorFile(TurboHybrid::LOG_ERROR_K);
+            //if a key is down save the int of the key that was pressed into my allocated array
+            if (numOfKeysPressed <= maxKeysPressed) {
+                keysPressed[numOfKeysPressed] = event.key.keysym.sym;
+                numOfKeysPressed++;
             }
             if (event.key.keysym.sym == SDLK_ESCAPE)
             {
                 engine->quit = true;
             }
         }
+    }
+
+    //if keys were pressed use them fro something intelligent 
+    if (numOfKeysPressed > 0) {
+        std::cout << "Num Of keys Presses last frame: " << numOfKeysPressed << "\n";
+        //send keys to my input system
     }
 
     int x = (SDL_sinf(engine->frame / 100.0f) * 100.0f) + 200.0;
@@ -293,6 +306,7 @@ void frameStep(void* arg)
     SDL_RenderPresent(engine->renderer);
 
     engine->stack->clear();
+
 
     
 }

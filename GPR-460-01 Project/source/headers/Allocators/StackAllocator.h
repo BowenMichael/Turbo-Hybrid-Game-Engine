@@ -18,10 +18,21 @@ namespace TurboHybrid {
         }
 
         template <typename T>
-        T* alloc() { alloc<T>(1); }
+        T* alloc() {
+            size_t sizeToAllocate = sizeof(T);
+            T* allocationPoint = (T*)base;
+            // TODO: Make sure we're not writing past the
+            //         end of the stack!
+            if (base + sizeToAllocate > buffer + stackSize)
+            {
+                return nullptr;
+            }
+            base += sizeToAllocate;
+            return allocationPoint;
+        }
 
         template <typename T>
-        T* alloc(size_t* arrayCount) {
+        T* alloc(size_t arrayCount) {
             size_t sizeToAllocate = sizeof(T) * arrayCount;
             T* allocationPoint = (T*)base;
             // TODO: Make sure we're not writing past the

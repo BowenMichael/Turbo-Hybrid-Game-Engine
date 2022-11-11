@@ -86,13 +86,13 @@ void TurboHybrid::ComponentSystem::update(const float& deltatime)
 	for (int i = 0; i < mComponents.sNumOfPlayerControllers; i++) {
 		mComponents.sPlayerControllerComponents[i].update(deltatime);
 	}
-	for (int i = 0; i < mComponents.sNumOfRectangleColliders; i++) {
+	/*for (int i = 0; i < mComponents.sNumOfRectangleColliders; i++) {
 		for (int j = 0; j < mComponents.sNumOfRectangleColliders; j++) {
 			if (i != j)
 				mComponents.sRectangleColliders[i].CheckCollision(&mComponents.sRectangleColliders[j]);
 
 		}
-	}
+	}*/
 }
 
 void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
@@ -107,12 +107,14 @@ void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 		Rect rect = renderer->GetRect();
 		Color color = renderer->GetColor();
 		SDL_Rect r = {
-			static_cast<int>(transform->GetLocation().x + rect.width * .5f),
-			static_cast<int>(transform->GetLocation().y + rect.height * .5f),
+			static_cast<int>(transform->GetLocation().x - rect.width * .5f),
+			static_cast<int>(transform->GetLocation().y - rect.height * .5f),
 			static_cast<int>(rect.width),
 			static_cast<int>(rect.height)
 		};
+
 		SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(color.r * 255), (Uint8)(color.g * 255), (Uint8)(color.b * 255), (Uint8)(color.a * SDL_ALPHA_OPAQUE));
+		SDL_RenderDrawRect(sdlRenderer, &r);
 		SDL_RenderFillRect(sdlRenderer, &r);
 
 		rects[i] = r;

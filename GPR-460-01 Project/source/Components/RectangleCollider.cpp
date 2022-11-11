@@ -30,15 +30,13 @@ bool TurboHybrid::RectangleCollider::CheckCollision(RectangleCollider* other)
 	Rect otherRect = gameObject->GetRenderer()->GetRect();
 	Vector3 otherExtentsPosition = Vector3(otherPosition.x + otherRect.width, otherPosition.y + otherRect.height, position.z);
 
-	if (   extentsPosition.x >= otherPosition.x 
-		&& position.x <= otherExtentsPosition.x
-		&& extentsPosition.y >= otherPosition.y
-		&& position.y <= otherExtentsPosition.y
+	if (   extentsPosition.x >= otherPosition.x + otherRect.width * .5f
+		&& position.x + rect.width * .5f <= otherExtentsPosition.x
+		&& extentsPosition.y >= otherPosition.y + otherRect.height * .5f
+		&& position.y + rect.height * .5f <= otherExtentsPosition.y
 
-		) {
-		//colliding		
-		if(OnCollision)
-			OnCollision();
+		) 
+	{	
 		isColliding = true;
 		return true;
 	}
@@ -50,3 +48,9 @@ void TurboHybrid::RectangleCollider::SetOnCollision(void (*onCollisionCallback)(
 {
 	OnCollision = onCollisionCallback;
 }
+
+void TurboHybrid::RectangleCollider::OnCollisionWithOther(RectangleCollider* other)
+{
+	gameObject->OnCollisionWithOther(other);
+}
+
