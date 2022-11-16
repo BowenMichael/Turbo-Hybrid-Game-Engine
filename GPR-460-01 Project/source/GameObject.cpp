@@ -5,7 +5,6 @@
 #include "../source/headers/Components/PlayerController.h"
 #include "../source/headers/Components/RectangleCollider.h"
 #include "../source/headers/Components/RectangleRenderer.h"
-#include "Components/ColliderColorChanger.cpp"
 
 TurboHybrid::GameObject::GameObject() : 
 	transform(),
