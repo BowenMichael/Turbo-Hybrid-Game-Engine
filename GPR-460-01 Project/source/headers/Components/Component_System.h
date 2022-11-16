@@ -35,7 +35,10 @@ namespace TurboHybrid {
 		static ComponentSystem* GetComponentSystem();
 		static void DeleteInstance();
 
-		
+		//RectangleRenderer* CreateRenderer();
+		//RectangleCollider* CreateCollider();
+		//PlayerController* CreatePlayerController();
+		//ColliderColorChanger* CreateColliderColorChanger();
 		
 		static ColliderColorChanger* allocateCollorChanger();
 		static PlayerController* allocatePlayerController();

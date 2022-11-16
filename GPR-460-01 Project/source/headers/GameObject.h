@@ -14,32 +14,34 @@ namespace TurboHybrid {
 	{
 	public:
 		GameObject();
-		GameObject(Transform* transform = nullptr,  
+		GameObject(Transform* transform );
+		GameObject(Transform* transform ,  
 			RectangleRenderer* rectRend = nullptr, 
 			RectangleCollider* rectCol = nullptr, 
 			PlayerController* plc = nullptr, 
 			ColliderColorChanger* colorChanger = nullptr);
 		virtual ~GameObject();
 		
-		//RectangleRenderer* CreateRenderer();
-		//RectangleCollider* CreateCollider();
-		//PlayerController* CreatePlayerController();
-		//ColliderColorChanger* CreateColliderColorChanger();
+		void SetTransform(Transform* transform) { mTransform = transform; };
+		void SetRenderer(RectangleRenderer* rectRend) { mRenderer = rectRend; };
+		void SetCollider(RectangleCollider* rectCol) { mCollider = rectCol; };
+		void SetPlayerController(PlayerController* plc) { mPlayer = plc; };
+		void SetColliderColorChanger(ColliderColorChanger* colorChanger) { mColorChanger = colorChanger; };
 
-		Transform* GetTransform() { return transform; };
-		RectangleCollider* GetCollider() { return collider; };
-		RectangleRenderer* GetRenderer() { return renderer; };
+		Transform* GetTransform() { return mTransform; };
+		RectangleCollider* GetCollider() { return mCollider; };
+		RectangleRenderer* GetRenderer() { return mRenderer; };
 
 		bool CheckCollision(GameObject* other);
 		void OnCollisionWithOther(RectangleCollider* other);
 
 		void Draw(SDL_Renderer* sdlRenderer);
 	protected:
-		Transform* transform;
-		RectangleRenderer* renderer;
-		RectangleCollider* collider;
-		PlayerController* player;
-		ColliderColorChanger* colorChanger;
+		Transform* mTransform;
+		RectangleRenderer* mRenderer;
+		RectangleCollider* mCollider;
+		PlayerController* mPlayer;
+		ColliderColorChanger* mColorChanger;
 	};
 
 }

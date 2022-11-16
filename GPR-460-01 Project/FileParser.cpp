@@ -42,3 +42,22 @@ size_t Turbohybrid::FileParser::GetNumOfGameObjects()
 {
 	return mData.at("GameObjects").size();
 }
+
+json Turbohybrid::FileParser::GetGameObject(int id)
+{
+	return mData.at("GameObjects").at(id);
+}
+
+bool Turbohybrid::FileParser::hasComponent(const json& gameobject, const std::string& id)
+{
+	if (gameobject.contains(id)) {
+		return true;
+	}
+	return false;
+}
+
+TurboHybrid::Vector3 Turbohybrid::FileParser::ParseGameObjectPositionData(const json& gameObject)
+{
+
+	return TurboHybrid::Vector3();
+}

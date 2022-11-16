@@ -14,8 +14,13 @@ namespace Turbohybrid
 		~FileParser() {
 		}
 		TurboHybrid::Vector3 GetGameobjectPosition(int id);
-
+		
 		size_t GetNumOfGameObjects();
+
+		bool hasComponent(const json& gameobject, const std::string& id);
+		TurboHybrid::Vector3 ParseGameObjectPositionData(const json& gameObject);
+
+		json GetGameObject(int id);
 	private:
 		TurboHybrid::string mFileName;
 		json mData;

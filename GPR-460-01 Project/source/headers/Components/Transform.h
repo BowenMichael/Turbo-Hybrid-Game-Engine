@@ -1,14 +1,17 @@
 #pragma once
 #include "headers/Util/Vector3.h"
+#include "headers/System_Common.h"
 
 namespace TurboHybrid {
 	
+	class GameObject;
+	class ComponentSystem;
 	class Transform
 	{
 	public:
 		Transform();
 		Transform(const float& x, const float& y, const float& z);
-
+		static void CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator);
 		void load(const Vector3& position);
 
 		Vector3 GetLocation();

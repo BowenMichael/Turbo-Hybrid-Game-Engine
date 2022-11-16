@@ -24,10 +24,10 @@
 #include "headers/Components/RectangleCollider.h"
 #include "headers/Components/RectangleRenderer.h"
 #include <vector>
+#include <unordered_map>
 #include "headers/Components/Component_System.h"
 #include <headers/Allocators/StackAllocator.h>
 #include "FileParser.h"
-#include <Components/Transform.cpp>
 
 
 #ifdef _DEBUG
@@ -61,7 +61,7 @@ TurboHybrid::GameObject* background;
 const Uint32 MAX_GAME_OBJECTS = 500;
 
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
-
+typedef void (*CompFn)(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator);
 
 int main(int argc, char* argv[])
 {
@@ -92,6 +92,10 @@ int main(int argc, char* argv[])
     engine.window = window;
     engine.viewport = {};
     engine.stack = stack;
+
+    std::unordered_map<int, CompFn> creationMap;
+    creationMap[0] = TurboHybrid::Transform::CreateComponent;
+    //creationMap[1] = world->allocateRectangleRenderer;
 
     /*
         Player init
@@ -179,7 +183,32 @@ int main(int argc, char* argv[])
 
     std::cout << "Game Objects: " << GameObjectsFromFile << "\n";
     for (int i = 0; i < GameObjectsFromFile && i < MAX_GAME_OBJECTS; i++) {
-        TurboHybrid::Transform* tmpTransform = world->allocateTransform();
+        ////check what components it has
+        TurboHybrid::GameObject* tmp = DBG_NEW TurboHybrid::GameObject();
+        //get gameobject components list
+        int numOfComponents = parser->GetGameObject(i).size();
+        for (int j = 0; j < numOfComponents; j++) 
+        {
+            json gameobject = parser->GetGameObject(i);
+            switch (j) {
+            case 0:
+                if (parser->hasComponent(gameobject, "Position")) {
+                    creationMap[j](tmp, world);
+                }
+                break;
+            default:
+                break;
+            }
+            //tmp->SetRenderer(world->allocateRectangleRenderer());
+
+            
+        }
+        //iterate throguh
+        //call function to allocate a new component
+        //allocate data
+
+        
+       /* TurboHybrid::Transform* tmpTransform = creationMap[0];
         tmpTransform->load(parser->GetGameobjectPosition(i));
         TurboHybrid::GameObject* tmp = DBG_NEW TurboHybrid::GameObject(
             tmpTransform,
@@ -187,7 +216,7 @@ int main(int argc, char* argv[])
             nullptr,
             nullptr,
             nullptr
-        );
+        );*/
         gameObjects[i] = tmp;
     }
     

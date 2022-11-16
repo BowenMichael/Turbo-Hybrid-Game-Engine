@@ -5,34 +5,44 @@
 #include "headers/Components/PlayerController.h"
 #include "headers/Components/RectangleCollider.h"
 #include "headers/Components/RectangleRenderer.h"
-#include "Components/ColliderColorChanger.cpp"
+#include "headers/Components/Transform.h"
+
 
 TurboHybrid::GameObject::GameObject() : 
-	transform(nullptr),
-	renderer(nullptr),
-	collider(nullptr),
-	player(nullptr),
-	colorChanger(nullptr)
+	mTransform(nullptr),
+	mRenderer(nullptr),
+	mCollider(nullptr),
+	mPlayer(nullptr),
+	mColorChanger(nullptr)
 {
 	
 }
 
+TurboHybrid::GameObject::GameObject(Transform* transform)
+	:mTransform(transform),
+	mRenderer(nullptr),
+	mCollider(nullptr),
+	mPlayer(nullptr),
+	mColorChanger(nullptr)
+{
+}
+
 TurboHybrid::GameObject::GameObject(Transform* transform, RectangleRenderer* rectRend, RectangleCollider* rectCol, PlayerController* plc, ColliderColorChanger* colorChanger)
 	: 
-	transform(transform),
-	renderer(rectRend),
-	collider(rectCol),
-	player(plc),
-	colorChanger(colorChanger)
+	mTransform(transform),
+	mRenderer(rectRend),
+	mCollider(rectCol),
+	mPlayer(plc),
+	mColorChanger(colorChanger)
 {
-	if(collider)
-		collider->gameObject = this;
-	if(this->colorChanger)
-		this->colorChanger->gameobject = this;
-	if(player)
-		player->gameObject = this;
-	if (renderer)
-		renderer->gameObject = this;
+	if(mCollider)
+		mCollider->gameObject = this;
+	if(this->mColorChanger)
+		this->mColorChanger->gameobject = this;
+	if(mPlayer)
+		mPlayer->gameObject = this;
+	if (mRenderer)
+		mRenderer->gameObject = this;
 }
 
 TurboHybrid::GameObject::~GameObject()
@@ -75,24 +85,24 @@ TurboHybrid::GameObject::~GameObject()
 
 bool TurboHybrid::GameObject::CheckCollision(GameObject* other)
 {
-	if(collider && other->GetCollider())
-		return collider->CheckCollision(other->GetCollider());
+	if(mCollider && other->GetCollider())
+		return mCollider->CheckCollision(other->GetCollider());
 
 	return false;
 }
 
 void TurboHybrid::GameObject::OnCollisionWithOther(RectangleCollider* other)
 {
-	renderer->SetColor(colorChanger->getCollidedColor());
+	mRenderer->SetColor(mColorChanger->getCollidedColor());
 }
 
 void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)
 {
-	Rect rect = renderer->GetRect();
-	Color color = renderer->GetColor();
+	Rect rect = mRenderer->GetRect();
+	Color color = mRenderer->GetColor();
 	SDL_Rect r = {
-		static_cast<int>(transform->GetLocation().x + rect.width * .5f),
-		static_cast<int>(transform->GetLocation().y + rect.height * .5f),
+		static_cast<int>(mTransform->GetLocation().x + rect.width * .5f),
+		static_cast<int>(mTransform->GetLocation().y + rect.height * .5f),
 		static_cast<int>(rect.width),
 		static_cast<int>(rect.height)
 	};

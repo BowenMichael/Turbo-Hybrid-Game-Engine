@@ -1,6 +1,7 @@
 #include "headers/Components/RectangleCollider.h"
 #include "headers/GameObject.h"
 #include "headers/Components/RectangleRenderer.h"
+#include "headers/Components/Transform.h"
 
 TurboHybrid::RectangleCollider::RectangleCollider(GameObject* gm)
 	: gameObject(gm),
