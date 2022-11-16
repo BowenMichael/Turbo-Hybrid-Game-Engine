@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileParser.cpp" />
     <ClCompile Include="GPR-460-01-Project.cpp" />
     <ClCompile Include="source\Allocators\StackAllocator.cpp" />
     <ClCompile Include="source\Components\ColliderColorChanger.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="source\windows\System_Win32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileParser.h" />
     <ClInclude Include="source\headers\Allocators\StackAllocator.h" />
     <ClInclude Include="source\headers\Components\ColliderColorChanger.h" />
     <ClInclude Include="source\headers\Components\Component_Common.h" />

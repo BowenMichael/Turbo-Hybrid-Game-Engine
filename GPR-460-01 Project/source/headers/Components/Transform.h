@@ -9,6 +9,8 @@ namespace TurboHybrid {
 		Transform();
 		Transform(const float& x, const float& y, const float& z);
 
+		void load(const Vector3& position);
+
 		Vector3 GetLocation();
 		Vector3 SetLocation(const float& x, const float& y, const float& z);
 

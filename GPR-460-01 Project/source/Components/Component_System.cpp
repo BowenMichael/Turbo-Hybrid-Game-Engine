@@ -8,7 +8,9 @@ TurboHybrid::Components TurboHybrid::ComponentSystem::mComponents = Components()
 void TurboHybrid::ComponentSystem::InitInstance()
 {
 	if (self == nullptr) {
-		self = new ComponentSystem();
+		self = DBG_NEW ComponentSystem();
+
+		
 	}
 }
 
@@ -98,7 +100,7 @@ void TurboHybrid::ComponentSystem::update(const float& deltatime)
 void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 {
 	//I don't like doing this every fram but it works for now
-	SDL_Rect* rects = DBG_NEW SDL_Rect[mComponents.sNumOfRectangleRenderers];
+	//SDL_Rect* rects = DBG_NEW SDL_Rect[mComponents.sNumOfRectangleRenderers];
 	for (int i = mComponents.sNumOfRectangleRenderers - 1; i >= 0; i--) {
 		RectangleRenderer* renderer = &mComponents.sRectangleRenderers[i];
 		Transform* transform = renderer->gameObject->GetTransform();
@@ -117,7 +119,7 @@ void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 		SDL_RenderDrawRect(sdlRenderer, &r);
 		SDL_RenderFillRect(sdlRenderer, &r);
 
-		rects[i] = r;
+		//rects[i] = r;
 	}
 	Uint8 r, g, b, a;
 	//SDL_GetRenderDrawColor(sdlRenderer, &r, &g, &b, &a);
@@ -125,7 +127,7 @@ void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 	////SDL_RenderFillRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
 	//SDL_SetRenderDrawColor(sdlRenderer, r, g, b, a);
 	//SDL_RenderDrawRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
-	delete rects;
+	//delete rects;
 	
 }
 

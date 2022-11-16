@@ -6,6 +6,8 @@
 #include "headers/Components/RectangleRenderer.h"
 #include "headers/Components/Transform.h"
 
+#include <unordered_map>
+
 namespace TurboHybrid {
 	const int MAX_COMPONENTS = 1000;
 
@@ -34,11 +36,13 @@ namespace TurboHybrid {
 		static void DeleteInstance();
 
 		
+		
 		static ColliderColorChanger* allocateCollorChanger();
 		static PlayerController* allocatePlayerController();
 		static RectangleCollider* allocateRectangleCollider();
 		static RectangleRenderer* allocateRectangleRenderer();
 		static Transform* allocateTransform();
+
 
 		static void update(const float& deltatime);
 		static void render(SDL_Renderer* sdlRenderer);
@@ -46,6 +50,7 @@ namespace TurboHybrid {
 		ComponentSystem();
 		static Components mComponents;
 		static ComponentSystem* self;
+		static std::unordered_map<int, void> mCreationMap;
 		
 	};
 }

@@ -46,6 +46,9 @@
     <Filter Include="Header Files\Allocators">
       <UniqueIdentifier>{aaa36fe8-cdcd-4dbe-be64-a8c2206efe3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\System\File Parser">
+      <UniqueIdentifier>{2133aa1d-7d77-4c37-9728-3cf658d2f3ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01-Project.cpp">
@@ -79,6 +82,9 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="source\Allocators\StackAllocator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -130,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="source\headers\Allocators\StackAllocator.h">
       <Filter>Header Files\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="FileParser.h">
+      <Filter>Header Files\System\File Parser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
