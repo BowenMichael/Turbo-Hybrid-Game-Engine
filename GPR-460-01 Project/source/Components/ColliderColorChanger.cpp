@@ -3,20 +3,37 @@
 #include "headers/GameObject.h"
 #include "headers/Components/RectangleCollider.h"
 #include "headers/Components/RectangleRenderer.h"
+#include "headers/Components/Component_System.h"
+
+#include <assert.h>
 
 
 TurboHybrid::ColliderColorChanger::ColliderColorChanger(GameObject* gameobject, const Color& color)
 	:
-	collidedColor(color),
-	originalColor(color),
-	gameobject(gameobject)
+	_collidedColor(color),
+	_originalColor(color),
+	gameObject(gameobject)
 {
+}
+
+void TurboHybrid::ColliderColorChanger::CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator)
+{
+	ColliderColorChanger* tmp = allocator->allocateCollorChanger();
+	tmp->gameObject = gm;
+	gm->SetColliderColorChanger(tmp);
+}
+
+void TurboHybrid::ColliderColorChanger::load(const Color& collidedColor)
+{
+	assert(gameObject->GetRenderer() != nullptr);
+	setOriginalColor(gameObject->GetRenderer()->GetColor());
+	setCollidedColor(collidedColor);	
 }
 
 void TurboHybrid::ColliderColorChanger::Update(const float& deltatime)
 {
-	if (gameobject) {
-		gameobject->GetRenderer()->SetColor(originalColor);
+	if (gameObject) {
+		gameObject->GetRenderer()->SetColor(_originalColor);
 		/*if (gameobject->GetCollider()->GetIsColliding()) {
 			gameobject->GetRenderer()->SetColor(collidedColor);
 		}
@@ -27,9 +44,9 @@ void TurboHybrid::ColliderColorChanger::Update(const float& deltatime)
 }
 
 TurboHybrid::ColliderColorChanger::ColliderColorChanger() :
-	collidedColor(Color(0.0f, 1.0f, 0.0f, 1.0f)),
-	originalColor(Color()),
-	gameobject(nullptr)
+	_collidedColor(Color(0.0f, 1.0f, 0.0f, 1.0f)),
+	_originalColor(Color()),
+	gameObject(nullptr)
 
 {
 }	

@@ -1,6 +1,7 @@
 #include "headers/Components/PlayerController.h"
 #include "headers/GameObject.h"
 #include <SDL.h>
+#include <headers/Components/Component_System.h>
 
 TurboHybrid::PlayerController::PlayerController()
 	:gameObject(nullptr)
@@ -13,6 +14,17 @@ TurboHybrid::PlayerController::PlayerController(GameObject* gameobject)
 }
 
 TurboHybrid::PlayerController::~PlayerController()
+{
+}
+
+void TurboHybrid::PlayerController::CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator)
+{
+	PlayerController* tmp = allocator->allocatePlayerController();
+	tmp->gameObject = gm;
+	gm->SetPlayerController(tmp);
+}
+
+void TurboHybrid::PlayerController::load()
 {
 }
 

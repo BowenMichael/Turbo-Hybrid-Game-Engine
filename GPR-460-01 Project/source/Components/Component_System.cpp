@@ -1,6 +1,8 @@
 #include "headers/Components/Component_System.h" 
 #include "headers/GameObject.h"
 #include "headers/System_Common.h"
+#include <sstream>
+#include <iostream>
 
 TurboHybrid::ComponentSystem* TurboHybrid::ComponentSystem::self = nullptr;
 TurboHybrid::Components TurboHybrid::ComponentSystem::mComponents = Components();
@@ -80,6 +82,12 @@ TurboHybrid::Transform* TurboHybrid::ComponentSystem::allocateTransform()
 	return nullptr;
 }
 
+void TurboHybrid::ComponentSystem::AddComponentToGameObject(const int& indexLiteral, GameObject* gameObject)
+{
+
+	mCreationMap[indexLiteral](gameObject, this);
+}
+
 void TurboHybrid::ComponentSystem::update(const float& deltatime)
 {
 	for (int i = 0; i < mComponents.sNumOfColorChangers; i++) {
@@ -93,6 +101,12 @@ void TurboHybrid::ComponentSystem::update(const float& deltatime)
 			if (i != j)
 				mComponents.sRectangleColliders[i].CheckCollision(&mComponents.sRectangleColliders[j]);
 
+		}
+	}*/
+	/*for (int i = 0; i < mComponents.sNumOfRectangleColliders; i++) 
+	{
+		if (mComponents.sRectangleColliders[i].GetIsColliding()) {
+			mComponents.sRectangleColliders[i].OnCollisionWithOther();
 		}
 	}*/
 }
@@ -133,4 +147,12 @@ void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 
 TurboHybrid::ComponentSystem::ComponentSystem()
 {
+	REGISTER_COMPONENT(TurboHybrid::Transform);
+	//REGISTER_COMPONENT(TurboHybrid::RectangleRenderer);
+
+	mCreationMap[RectangleRenderer::kCompID] = RectangleRenderer::CreateComponent;
+	REGISTER_COMPONENT(TurboHybrid::RectangleCollider);
+	REGISTER_COMPONENT(TurboHybrid::PlayerController);
+	REGISTER_COMPONENT(TurboHybrid::ColliderColorChanger);
 }
+

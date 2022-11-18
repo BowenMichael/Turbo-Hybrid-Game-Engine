@@ -8,13 +8,20 @@
 
 #include <unordered_map>
 
+typedef void (*CompFn)(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator);
+
+#define REGISTER_COMPONENT(t) mCreationMap[t::kCompID] = t::CreateComponent
+
 namespace TurboHybrid {
 	const int MAX_COMPONENTS = 1000;
+	const int KEY_SIZE = 4;
 
+	class GameObject;
 	struct Components {
 		Components()
 		{
 		};
+
 		ColliderColorChanger sCollorChangerComponents[MAX_COMPONENTS];
 		PlayerController sPlayerControllerComponents[MAX_COMPONENTS];
 		RectangleCollider sRectangleColliders[MAX_COMPONENTS];
@@ -46,6 +53,7 @@ namespace TurboHybrid {
 		static RectangleRenderer* allocateRectangleRenderer();
 		static Transform* allocateTransform();
 
+		void AddComponentToGameObject(const int& indexLiteral, GameObject* gameObject);
 
 		static void update(const float& deltatime);
 		static void render(SDL_Renderer* sdlRenderer);
@@ -53,7 +61,7 @@ namespace TurboHybrid {
 		ComponentSystem();
 		static Components mComponents;
 		static ComponentSystem* self;
-		static std::unordered_map<int, void> mCreationMap;
+		std::unordered_map<int32_t, CompFn> mCreationMap;
 		
 	};
 }

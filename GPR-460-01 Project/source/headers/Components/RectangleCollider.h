@@ -1,11 +1,16 @@
 #pragma once
 namespace TurboHybrid {
 	class GameObject;
+	class ComponentSystem;
 	class RectangleCollider
 	{
 	public:
 		RectangleCollider();
 		RectangleCollider(GameObject* gm);
+
+		static enum { kCompID = 'CLID' };
+		static void CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator);
+		void load();
 
 		void Update(const float& deltaTime);
 		bool CheckCollision(RectangleCollider* other);

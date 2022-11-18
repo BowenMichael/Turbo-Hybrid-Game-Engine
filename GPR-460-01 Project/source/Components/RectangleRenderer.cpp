@@ -1,8 +1,10 @@
 #include "headers/Components/RectangleRenderer.h"
+#include <headers/Components/Component_System.h>
+#include <headers/GameObject.h>
 
 TurboHybrid::RectangleRenderer::RectangleRenderer()
-	: rect(),
-	color()
+	: _rect(),
+	_color()
 {
 }
 
@@ -11,36 +13,49 @@ TurboHybrid::RectangleRenderer::~RectangleRenderer()
 }
 
 TurboHybrid::RectangleRenderer::RectangleRenderer(const Rect& rect, const Color& color)
-	: rect(rect),
-	color(color)
+	: _rect(rect),
+	_color(color)
 {
 }
 
 TurboHybrid::RectangleRenderer::RectangleRenderer(const float& height, const float& width)
-	: rect(width, height),
-	color()
+	: _rect(width, height),
+	_color()
 {
+}
+
+void TurboHybrid::RectangleRenderer::CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator)
+{
+	RectangleRenderer* tmp = allocator->allocateRectangleRenderer();
+	tmp->gameObject = gm;
+	gm->SetRenderer(tmp);
+}
+
+void TurboHybrid::RectangleRenderer::load(const Rect& rect, const Color& color)
+{
+	SetRect(rect);
+	SetColor(color);
 }
 
 Rect TurboHybrid::RectangleRenderer::GetRect()
 {
-	return rect;
+	return _rect;
 }
 
 Color TurboHybrid::RectangleRenderer::GetColor()
 {
-	return color;
+	return _color;
 }
 
 Rect TurboHybrid::RectangleRenderer::SetRect(const Rect& r)
 {
-	rect = r;
-	return rect;
+	_rect = r;
+	return _rect;
 }
 
 Color TurboHybrid::RectangleRenderer::SetColor(const Color& c)
 {
-	color = c;
-	return color;
+	_color = c;
+	return _color;
 }
 

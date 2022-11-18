@@ -19,6 +19,8 @@
 
 
 
+
+
 namespace TurboHybrid {
 #ifdef __EMSCRIPTEN__
 	typedef std::string string;

@@ -9,8 +9,11 @@ namespace TurboHybrid {
 	class Transform
 	{
 	public:
+
 		Transform();
 		Transform(const float& x, const float& y, const float& z);
+
+		static enum {kCompID = 'TRAN' };
 		static void CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator);
 		void load(const Vector3& position);
 

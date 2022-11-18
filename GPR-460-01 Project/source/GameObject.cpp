@@ -38,7 +38,7 @@ TurboHybrid::GameObject::GameObject(Transform* transform, RectangleRenderer* rec
 	if(mCollider)
 		mCollider->gameObject = this;
 	if(this->mColorChanger)
-		this->mColorChanger->gameobject = this;
+		this->mColorChanger->gameObject = this;
 	if(mPlayer)
 		mPlayer->gameObject = this;
 	if (mRenderer)
@@ -93,7 +93,9 @@ bool TurboHybrid::GameObject::CheckCollision(GameObject* other)
 
 void TurboHybrid::GameObject::OnCollisionWithOther(RectangleCollider* other)
 {
-	mRenderer->SetColor(mColorChanger->getCollidedColor());
+	if(mColorChanger)
+		mRenderer->SetColor(mColorChanger->getCollidedColor());
+	std::cout << "Collision" << '\n';
 }
 
 void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)

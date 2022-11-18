@@ -27,6 +27,7 @@
 #include <unordered_map>
 #include "headers/Components/Component_System.h"
 #include <headers/Allocators/StackAllocator.h>
+#include <headers/Components/Transform.h>
 #include "FileParser.h"
 
 
@@ -61,7 +62,11 @@ TurboHybrid::GameObject* background;
 const Uint32 MAX_GAME_OBJECTS = 500;
 
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
-typedef void (*CompFn)(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator);
+Uint32 numOfSpawnedObjects = 0;
+
+
+
+
 
 int main(int argc, char* argv[])
 {
@@ -93,9 +98,9 @@ int main(int argc, char* argv[])
     engine.viewport = {};
     engine.stack = stack;
 
-    std::unordered_map<int, CompFn> creationMap;
-    creationMap[0] = TurboHybrid::Transform::CreateComponent;
-    //creationMap[1] = world->allocateRectangleRenderer;
+
+
+
 
     /*
         Player init
@@ -179,45 +184,20 @@ int main(int argc, char* argv[])
         init from file
     */
     Turbohybrid::FileParser* parser = DBG_NEW Turbohybrid::FileParser(L"placeholder.json");
+
     int GameObjectsFromFile = (int)parser->GetNumOfGameObjects();
+    TurboHybrid::GameObject* newGameObjects;
+
 
     std::cout << "Game Objects: " << GameObjectsFromFile << "\n";
-    for (int i = 0; i < GameObjectsFromFile && i < MAX_GAME_OBJECTS; i++) {
+    for (int i = 0; i < GameObjectsFromFile && i < GameObjectsFromFile; i++) {
         ////check what components it has
-        TurboHybrid::GameObject* tmp = DBG_NEW TurboHybrid::GameObject();
-        //get gameobject components list
-        int numOfComponents = parser->GetGameObject(i).size();
-        for (int j = 0; j < numOfComponents; j++) 
-        {
-            json gameobject = parser->GetGameObject(i);
-            switch (j) {
-            case 0:
-                if (parser->hasComponent(gameobject, "Position")) {
-                    creationMap[j](tmp, world);
-                }
-                break;
-            default:
-                break;
-            }
-            //tmp->SetRenderer(world->allocateRectangleRenderer());
-
-            
-        }
-        //iterate throguh
-        //call function to allocate a new component
-        //allocate data
-
+        gameObjects[i] = DBG_NEW TurboHybrid::GameObject();
         
-       /* TurboHybrid::Transform* tmpTransform = creationMap[0];
-        tmpTransform->load(parser->GetGameobjectPosition(i));
-        TurboHybrid::GameObject* tmp = DBG_NEW TurboHybrid::GameObject(
-            tmpTransform,
-            world->allocateRectangleRenderer(),
-            nullptr,
-            nullptr,
-            nullptr
-        );*/
-        gameObjects[i] = tmp;
+        //get gameobject components list
+        parser->DeserializeGameobject(gameObjects[i], i, world);
+        numOfSpawnedObjects++;
+
     }
     
     
@@ -284,24 +264,7 @@ void frameStep(void* arg)
 
     SDL_Event event;
 
-    /*
-        Stack allocator collision detections
-    */
-    //Allocate a block of memory inside my stack
-    //TurboHybrid::RectangleCollider* colliders = engine->stack->alloc<TurboHybrid::RectangleCollider>(numOfGameObjects);
-    //int numOfCollidingGameObjects = 0;
 
-    ////Iterate through all the gameobjects and put the data from those that collide with the player onto my allocated stack
-    //for (int i = 0; i < numOfGameObjects; i++) {
-    //    if (gameObjects[i] != nullptr && player->CheckCollision(gameObjects[i])) {
-    //        colliders[numOfCollidingGameObjects] = *(gameObjects[i]->GetCollider());
-    //        numOfCollidingGameObjects++;
-    //    }
-    //}
-
-    ////output number of colliding squares
-    //if(numOfCollidingGameObjects > 0)
-    //    std::cout << "Colliders Colliding: " << numOfCollidingGameObjects << "\n";
 
     Uint32 now = GetTicks();
 
@@ -310,10 +273,40 @@ void frameStep(void* arg)
 
     TurboHybrid::ComponentSystem::GetComponentSystem()->update(0);
 
-    ////call colliding colliders on collision function
-    //for (int i = 0; i < (int)numOfCollidingGameObjects; i++) {
-    //    colliders[i].OnCollisionWithOther(player->GetCollider());
-    //}
+    /*
+        Stack allocator collision detections
+    */
+    //Allocate a block of memory inside my stack
+    struct Collision {
+        TurboHybrid::RectangleCollider* owner;
+        TurboHybrid::RectangleCollider* other;
+    };
+
+    Collision* collisionsChecks = engine->stack->alloc<Collision>(numOfSpawnedObjects);
+    int numOfCollidingGameObjects = 0;
+
+    ////Iterate through all the gameobjects and put the data from those that collide with the player onto my allocated stack
+    for (int i = 0; i < MAX_GAME_OBJECTS; i++) {
+        for (int j = 0; j < MAX_GAME_OBJECTS; j++) {
+            if (i != j) {
+                if (gameObjects[i] != nullptr && gameObjects[j] != nullptr && gameObjects[j]->CheckCollision(gameObjects[i])) {
+                    collisionsChecks[numOfCollidingGameObjects].owner = (gameObjects[j]->GetCollider());
+                    collisionsChecks[numOfCollidingGameObjects].other = (gameObjects[i]->GetCollider());
+                    numOfCollidingGameObjects++;
+                }
+            }
+        }
+
+    }
+
+    ////output number of colliding squares
+    //if(numOfCollidingGameObjects > 0)
+    //    std::cout << "Colliders Colliding: " << numOfCollidingGameObjects << "\n";
+
+    //call colliding colliders on collision function
+    for (int i = 0; i < (int)numOfCollidingGameObjects; i++) {
+        collisionsChecks[i].owner->OnCollisionWithOther(collisionsChecks[i].other);
+    }
 
     /*
         Stack Allocator Key Pressed detection

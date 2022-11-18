@@ -2,11 +2,23 @@
 #include "headers/GameObject.h"
 #include "headers/Components/RectangleRenderer.h"
 #include "headers/Components/Transform.h"
+#include <headers/Components/Component_System.h>
 
 TurboHybrid::RectangleCollider::RectangleCollider(GameObject* gm)
 	: gameObject(gm),
 	isColliding(false),
 	OnCollision(nullptr)
+{
+}
+
+void TurboHybrid::RectangleCollider::CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator)
+{
+	RectangleCollider* tmpCol = allocator->allocateRectangleCollider();
+	tmpCol->gameObject = gm;
+	gm->SetCollider(tmpCol);
+}
+
+void TurboHybrid::RectangleCollider::load()
 {
 }
 

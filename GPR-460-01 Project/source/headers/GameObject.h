@@ -31,6 +31,8 @@ namespace TurboHybrid {
 		Transform* GetTransform() { return mTransform; };
 		RectangleCollider* GetCollider() { return mCollider; };
 		RectangleRenderer* GetRenderer() { return mRenderer; };
+		PlayerController* GetPlayerController() { return mPlayer; };
+		ColliderColorChanger* GetColorChanger() { return mColorChanger; };
 
 		bool CheckCollision(GameObject* other);
 		void OnCollisionWithOther(RectangleCollider* other);
