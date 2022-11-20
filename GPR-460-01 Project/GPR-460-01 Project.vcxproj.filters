@@ -49,6 +49,9 @@
     <Filter Include="Header Files\System\File Parser">
       <UniqueIdentifier>{2133aa1d-7d77-4c37-9728-3cf658d2f3ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\public">
+      <UniqueIdentifier>{4695efb6-39d2-4431-8868-d517a674a47f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GPR-460-01-Project.cpp">

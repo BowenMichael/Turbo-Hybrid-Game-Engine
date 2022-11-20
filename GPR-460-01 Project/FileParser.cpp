@@ -15,9 +15,9 @@ int charsToIntLiteral(const unsigned char* a)
 Turbohybrid::FileParser::FileParser(const TurboHybrid::string& fileName):
 	mFileName(fileName)
 {
-	std::ifstream f(fileName);
-	//mData = json::parse(f);
-	mData = json::parse(R"(
+	std::ifstream f(fileName.c_str());
+	mData = json::parse(f);
+	/*mData = json::parse(R"(
 		{
 			"GameObjects" :
 			[
@@ -25,7 +25,7 @@ Turbohybrid::FileParser::FileParser(const TurboHybrid::string& fileName):
 					"TRAN": [0, 0], 
 					"RECT": 
 					{
-						"Size": [150, 100],
+						"Size": [100, 100],
 						"Color": [1, 0, 1, 1]
 					},
 					"CLID" : {},
@@ -40,7 +40,7 @@ Turbohybrid::FileParser::FileParser(const TurboHybrid::string& fileName):
 					"TRAN": [220, 110], 
 					"RECT": 
 					{
-						"Size": [100, 100],
+						"Size": [150, 100],
 						"Color": [1, 0, 1, 1]
 					},
 					"CLID" : {}
@@ -48,7 +48,7 @@ Turbohybrid::FileParser::FileParser(const TurboHybrid::string& fileName):
 
 			]
 		}	
-	)");
+	)");*/
 }
 
 void Turbohybrid::FileParser::LoadTransformData(TurboHybrid::Transform* transform, const json& data)

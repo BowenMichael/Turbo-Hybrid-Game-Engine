@@ -95,7 +95,7 @@ void TurboHybrid::GameObject::OnCollisionWithOther(RectangleCollider* other)
 {
 	if(mColorChanger)
 		mRenderer->SetColor(mColorChanger->getCollidedColor());
-	std::cout << "Collision" << '\n';
+	//std::cout << "Collision" << '\n';
 }
 
 void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)

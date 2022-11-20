@@ -123,8 +123,8 @@ void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 		Rect rect = renderer->GetRect();
 		Color color = renderer->GetColor();
 		SDL_Rect r = {
-			static_cast<int>(transform->GetLocation().x - rect.width * .5f),
-			static_cast<int>(transform->GetLocation().y - rect.height * .5f),
+			static_cast<int>(transform->GetLocation().x),
+			static_cast<int>(transform->GetLocation().y),
 			static_cast<int>(rect.width),
 			static_cast<int>(rect.height)
 		};

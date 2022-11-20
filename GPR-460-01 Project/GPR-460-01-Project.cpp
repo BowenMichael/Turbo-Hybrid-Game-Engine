@@ -78,15 +78,15 @@ int main(int argc, char* argv[])
     TurboHybrid::System* system = TurboHybrid::System::Create();
     system->Init();
 
-    TurboHybrid::ComponentSystem::InitInstance();
-    TurboHybrid::ComponentSystem* world = TurboHybrid::ComponentSystem::GetComponentSystem();
-
     SDL_Init(SDL_INIT_VIDEO);
 
     window = SDL_CreateWindow("SDL2 Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     char* buffer = DBG_NEW char[1024 * 1024 * 32];
     TurboHybrid::StackAllocator* stack = DBG_NEW TurboHybrid::StackAllocator(1024 * 1024 * 32, buffer);
+
+    TurboHybrid::ComponentSystem::InitInstance();
+    TurboHybrid::ComponentSystem* world = TurboHybrid::ComponentSystem::GetComponentSystem();
 
     EngineState engine;
     engine.quit = false;
@@ -97,10 +97,6 @@ int main(int argc, char* argv[])
     engine.window = window;
     engine.viewport = {};
     engine.stack = stack;
-
-
-
-
 
     /*
         Player init
@@ -118,8 +114,6 @@ int main(int argc, char* argv[])
     //    world->allocatePlayerController(), 
     //    cPlrColorChanger
     //);
-
-
 
     ///*
     //    Collider init
@@ -166,24 +160,9 @@ int main(int argc, char* argv[])
     }*/
 
     /*
-        Background init
-    */
-    //Get Screen Size
-    SDL_GetDisplayBounds(0, &engine.viewport);    
-    SDL_GetWindowSize(engine.window, &engine.viewport.w, &engine.viewport.h);
-    //Set up rectangle the size of the screen
-    TurboHybrid::RectangleRenderer* backgroundRect = world->allocateRectangleRenderer();
-    backgroundRect->SetColor(Color(.25f, .25f, .25f, 1));
-    backgroundRect->SetRect(Rect(engine.viewport.w, engine.viewport.h));
-    //set up transform in center of the screen
-    TurboHybrid::Transform* backgroundTransform = world->allocateTransform();
-    backgroundTransform->SetLocation(engine.viewport.w * -.5f, engine.viewport.h * -.5f, 0);
-    background = DBG_NEW TurboHybrid::GameObject(backgroundTransform, backgroundRect);
-    
-    /*
         init from file
     */
-    Turbohybrid::FileParser* parser = DBG_NEW Turbohybrid::FileParser(L"placeholder.json");
+    Turbohybrid::FileParser* parser = DBG_NEW Turbohybrid::FileParser(L"data.json");
 
     int GameObjectsFromFile = (int)parser->GetNumOfGameObjects();
     TurboHybrid::GameObject* newGameObjects;
@@ -193,14 +172,28 @@ int main(int argc, char* argv[])
     for (int i = 0; i < GameObjectsFromFile && i < GameObjectsFromFile; i++) {
         ////check what components it has
         gameObjects[i] = DBG_NEW TurboHybrid::GameObject();
-        
+
         //get gameobject components list
         parser->DeserializeGameobject(gameObjects[i], i, world);
         numOfSpawnedObjects++;
 
     }
-    
-    
+
+    /*
+        Background init
+    */
+    //Get Screen Size
+    //SDL_GetDisplayBounds(0, &engine.viewport);    
+    //SDL_GetWindowSize(engine.window, &engine.viewport.w, &engine.viewport.h);
+    ////Set up rectangle the size of the screen
+    //TurboHybrid::RectangleRenderer* backgroundRect = world->allocateRectangleRenderer();
+    //backgroundRect->SetColor(Color(.25f, .25f, .25f, 1));
+    //backgroundRect->SetRect(Rect(engine.viewport.w, engine.viewport.h));
+    ////set up transform in center of the screen
+    //TurboHybrid::Transform* backgroundTransform = world->allocateTransform();
+    //backgroundTransform->SetLocation(0, 0, 0);
+    //background = DBG_NEW TurboHybrid::GameObject(backgroundTransform, backgroundRect);
+
     runMainLoop(&engine);
 
     SDL_DestroyRenderer(renderer);
