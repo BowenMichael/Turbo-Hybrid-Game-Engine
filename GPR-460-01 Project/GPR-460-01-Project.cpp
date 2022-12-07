@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <SDL.h>
+#include <SDL_syswm.h>
 #include <assert.h>
 
 // Add your System.h include file here
@@ -29,6 +30,7 @@
 #include <headers/Allocators/StackAllocator.h>
 #include <headers/Components/Transform.h>
 #include "FileParser.h"
+#include <bgfx/include/bgfx/platform.h>
 #include "bgfx/include/bgfx/bgfx.h"
 
 
@@ -76,10 +78,38 @@ int main(int argc, char* argv[])
     system->Init();
 
     SDL_Init(SDL_INIT_VIDEO);
+    //SDL_InitSubSystem(SDL_INIT_VIDEO);
+    
+
+    window = SDL_CreateWindow("SDL2 Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
+    //renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+
+    SDL_SysWMinfo wmi;
+    SDL_VERSION(&wmi.version);
+    if (!SDL_GetWindowWMInfo(window, &wmi)) {
+        return 1;
+    }
+
+    bgfx::PlatformData pd;
+    pd.ndt = nullptr;
+    pd.nwh = (HWND)wmi.info.win.window;
+    bgfx::setPlatformData(pd);
+
+    bgfx::renderFrame();
+
+    bgfx::Init bgfxInit;
+    bgfxInit.type = bgfx::RendererType::Count; // Automatically choose a renderer.
+    bgfxInit.resolution.width = WIDTH;
+    bgfxInit.resolution.height = HEIGHT;
+    bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
     bgfx::init();
 
-    window = SDL_CreateWindow("SDL2 Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    bgfx::setDebug(BGFX_DEBUG_TEXT /*| BGFX_DEBUG_STATS*/);
+
+    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
+    bgfx::setViewRect(0, 0, 0, WIDTH, HEIGHT);
+
     char* buffer = DBG_NEW char[1024 * 1024 * 32];
     TurboHybrid::StackAllocator* stack = DBG_NEW TurboHybrid::StackAllocator(1024 * 1024 * 32, buffer);
 
@@ -217,6 +247,7 @@ int main(int argc, char* argv[])
     system->Shutdown();
     delete system;
 
+    bgfx::shutdown();
     
 
     return 0;
@@ -255,49 +286,47 @@ void frameStep(void* arg)
 
     SDL_Event event;
 
-
-
     Uint32 now = GetTicks();
 
     engine->frame++;
     engine->frameStart = now;
 
-    TurboHybrid::ComponentSystem::GetComponentSystem()->update(0);
+    //TurboHybrid::ComponentSystem::GetComponentSystem()->update(0);
 
-    /*
-        Stack allocator collision detections
-    */
-    //Allocate a block of memory inside my stack
-    struct Collision {
-        TurboHybrid::RectangleCollider* owner;
-        TurboHybrid::RectangleCollider* other;
-    };
+    ///*
+    //    Stack allocator collision detections
+    //*/
+    ////Allocate a block of memory inside my stack
+    //struct Collision {
+    //    TurboHybrid::RectangleCollider* owner;
+    //    TurboHybrid::RectangleCollider* other;
+    //};
 
-    Collision* collisionsChecks = engine->stack->alloc<Collision>(numOfSpawnedObjects);
-    int numOfCollidingGameObjects = 0;
+    //Collision* collisionsChecks = engine->stack->alloc<Collision>(numOfSpawnedObjects);
+    //int numOfCollidingGameObjects = 0;
 
-    ////Iterate through all the gameobjects and put the data from those that collide with the player onto my allocated stack
-    for (int i = 0; i < MAX_GAME_OBJECTS; i++) {
-        for (int j = 0; j < MAX_GAME_OBJECTS; j++) {
-            if (i != j) {
-                if (gameObjects[i] != nullptr && gameObjects[j] != nullptr && gameObjects[j]->CheckCollision(gameObjects[i])) {
-                    collisionsChecks[numOfCollidingGameObjects].owner = (gameObjects[j]->GetCollider());
-                    collisionsChecks[numOfCollidingGameObjects].other = (gameObjects[i]->GetCollider());
-                    numOfCollidingGameObjects++;
-                }
-            }
-        }
+    //////Iterate through all the gameobjects and put the data from those that collide with the player onto my allocated stack
+    //for (int i = 0; i < MAX_GAME_OBJECTS; i++) {
+    //    for (int j = 0; j < MAX_GAME_OBJECTS; j++) {
+    //        if (i != j) {
+    //            if (gameObjects[i] != nullptr && gameObjects[j] != nullptr && gameObjects[j]->CheckCollision(gameObjects[i])) {
+    //                collisionsChecks[numOfCollidingGameObjects].owner = (gameObjects[j]->GetCollider());
+    //                collisionsChecks[numOfCollidingGameObjects].other = (gameObjects[i]->GetCollider());
+    //                numOfCollidingGameObjects++;
+    //            }
+    //        }
+    //    }
 
-    }
+    //}
 
-    ////output number of colliding squares
-    //if(numOfCollidingGameObjects > 0)
-    //    std::cout << "Colliders Colliding: " << numOfCollidingGameObjects << "\n";
+    //////output number of colliding squares
+    ////if(numOfCollidingGameObjects > 0)
+    ////    std::cout << "Colliders Colliding: " << numOfCollidingGameObjects << "\n";
 
-    //call colliding colliders on collision function
-    for (int i = 0; i < (int)numOfCollidingGameObjects; i++) {
-        collisionsChecks[i].owner->OnCollisionWithOther(collisionsChecks[i].other);
-    }
+    ////call colliding colliders on collision function
+    //for (int i = 0; i < (int)numOfCollidingGameObjects; i++) {
+    //    collisionsChecks[i].owner->OnCollisionWithOther(collisionsChecks[i].other);
+    //}
 
     /*
         Stack Allocator Key Pressed detection
@@ -335,16 +364,20 @@ void frameStep(void* arg)
 
     int x = (SDL_sinf(engine->frame / 100.0f) * 100.0f) + 200.0;
 
-    //clear screen
-    SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(engine->renderer);
 
-    TurboHybrid::ComponentSystem::GetComponentSystem()->render(engine->renderer);
+    //clear screen
+    
+   // SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+   // SDL_RenderClear(engine->renderer);
+
+    //TurboHybrid::ComponentSystem::GetComponentSystem()->render(engine->renderer);
+    
 
 
     //Prep next frame?
-    SDL_RenderPresent(engine->renderer);
-
+   // SDL_RenderPresent(engine->renderer);
+    bgfx::touch(0);
+    bgfx::frame();
     engine->stack->clear();
 
 }
