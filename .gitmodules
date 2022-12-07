@@ -1,0 +1,9 @@
+[submodule "GPR-460-01 Project/include/bgfx"]
+	path = GPR-460-01 Project/include/bgfx
+	url = https://github.com/bkaradzic/bgfx.git
+[submodule "GPR-460-01 Project/include/bimg"]
+	path = GPR-460-01 Project/include/bimg
+	url = https://github.com/bkaradzic/bimg.git
+[submodule "GPR-460-01 Project/include/bx"]
+	path = GPR-460-01 Project/include/bx
+	url = https://github.com/bkaradzic/bx.git
