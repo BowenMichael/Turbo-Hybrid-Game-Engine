@@ -29,6 +29,7 @@
 #include <headers/Allocators/StackAllocator.h>
 #include <headers/Components/Transform.h>
 #include "FileParser.h"
+#include "bgfx/include/bgfx/bgfx.h"
 
 
 #ifdef _DEBUG
@@ -64,10 +65,6 @@ const Uint32 MAX_GAME_OBJECTS = 500;
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
 Uint32 numOfSpawnedObjects = 0;
 
-
-
-
-
 int main(int argc, char* argv[])
 {
     const int WIDTH = 640;
@@ -79,6 +76,7 @@ int main(int argc, char* argv[])
     system->Init();
 
     SDL_Init(SDL_INIT_VIDEO);
+    bgfx::init();
 
     window = SDL_CreateWindow("SDL2 Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);

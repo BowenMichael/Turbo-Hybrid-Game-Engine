@@ -1,0 +1,8 @@
+bgfxDebug.lib
+bimg_decodeDebug.lib
+bimgDebug.lib
+bxDebug.lib
+bgfxRelease.lib
+bimg_decodeRelease.lib
+bimgRelease.lib
+bxRelease.lib
