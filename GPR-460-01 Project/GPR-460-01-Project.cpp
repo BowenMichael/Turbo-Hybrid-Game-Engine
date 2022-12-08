@@ -33,17 +33,12 @@
 #include <bgfx/include/bgfx/platform.h>
 #include "bgfx/include/bgfx/bgfx.h"
 #include <fstream>
-//#include "raymath.h"
-
-#define MATH_3D_IMPLEMENTATION
-#include <math_3d.h>
-
-//#include <bx/bx.h>
-
-//#include <bx/include/bx/math.h>
 
 
-
+// math
+#include <vec3.hpp>
+#include <mat4x4.hpp>
+#include <gtc/matrix_transform.hpp>
 
 #ifdef _DEBUG
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -69,11 +64,14 @@ struct EngineState
 
 void runMainLoop(EngineState* engine);
 void frameStep(void* arg);
+void RenderGame(EngineState* engine)
 Uint32 GetTicks();
 TurboHybrid::GameObject* player;
 TurboHybrid::GameObject* collider;
 TurboHybrid::GameObject* background;
 const Uint32 MAX_GAME_OBJECTS = 500;
+const uint32_t WIDTH = 640;
+const uint32_t HEIGHT = 480;
 
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
 Uint32 numOfSpawnedObjects = 0;
@@ -130,7 +128,6 @@ bgfx::IndexBufferHandle ibh;
 
 int main(int argc, char* argv[])
 {
-
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
 
@@ -314,8 +311,12 @@ void frameStep(void* arg)
     
     //Prep next frame?
     //SDL_RenderPresent(engine->renderer);
+
     //bgfx::touch(0);
     render(engine);
+
+
+    // end rendering
 
     engine->stack->clear();
 
@@ -323,33 +324,20 @@ void frameStep(void* arg)
 
 void render(EngineState* engine) {
     
-    //const Vector3 at = { 0.0f, 0.0f,  0.0f };
-    //const Vector3 eye = { 0.0f, 0.0f, -5.0f };
-    //const Vector3 up = { 0.0f, 1.0f, 0.0f };
-    ////float view[16]{};
+        // do rendering
+    bgfx::touch(0);
 
-    //Matrix view = MatrixLookAt(eye, at, up);
-    //
-    ////bx::mtxLookAt(view, eye, at);
-    ////float proj[16];
-    //Matrix proj = MatrixPerspective(60.0, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
-   
-    //bx::mtxProj(proj, 60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
-   //bgfx::setViewTransform(0, &view, &proj);
-    bgfx::setViewRect(0, 0, 0, uint16_t(WIDTH), uint16_t(HEIGHT));
-
-    vec3_t at = vec3(0.0f, 0.0f, 0.0f);
-    vec3_t eye = vec3(0.0f, 0.0f, -5.0f);
-    vec3_t up = vec3(0.0f, 1.0f, 0.0f);
-    mat4_t view;
-    view = m4_look_at(eye, at, up);
-    mat4_t proj;
-    proj = m4_perspective(60.0f, (float)(WIDTH) / (float)(HEIGHT), 0.01f, 1000.f);
-
-    bgfx::setViewTransform(0, &view, &proj);
+    const glm::vec3 at = { 0.0f, 0.0f,  0.0f };
+    const glm::vec3 eye = { 0.0f, 0.0f, -5.0f };
+    const glm::vec3 up = { 0.0f, 1.0f, 0.0f };
+    glm::mat4x4 view = glm::lookAt(eye, at, up);
+    glm::mat4x4 proj = glm::perspective(60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
+    bgfx::setViewTransform(0, view, proj);
 
     bgfx::setVertexBuffer(0, vbh);
     bgfx::setIndexBuffer(ibh);
+
+    bgfx::frame();
 
     bgfx::submit(0, m_program);
     //bgfx::frame();

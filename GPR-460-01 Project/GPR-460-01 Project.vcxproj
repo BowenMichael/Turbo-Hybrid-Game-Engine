@@ -104,9 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\michael.bowen\Desktop\GPR-460\GPR-460-01 Main Project\GPR-460-01 Project\source\Allocators;$(ProjectDir)\source\;$(ProjectDir)\include\;$(ProjectDir)\include\bx\include\compat\msvc;$(ProjectDir)\include\bimg\include;$(ProjectDir)\include\bgfx\include;$(ProjectDir)\include\bgfx\3rdparty;$(ProjectDir)\include\bgfx\examples\common;$(ProjectDir)\include\bx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\michael.bowen\Desktop\GPR-460\GPR-460-01 Main Project\GPR-460-01 Project\source\Allocators;$(ProjectDir)\source\;$(ProjectDir)\include\;$(ProjectDir)\include\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
