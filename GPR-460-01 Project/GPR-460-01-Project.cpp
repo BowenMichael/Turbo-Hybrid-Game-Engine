@@ -33,6 +33,10 @@
 #include <bgfx/include/bgfx/platform.h>
 #include "bgfx/include/bgfx/bgfx.h"
 
+// math
+#include <vec3.hpp>
+#include <mat4x4.hpp>
+#include <gtc/matrix_transform.hpp>
 
 #ifdef _DEBUG
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -58,19 +62,22 @@ struct EngineState
 
 void runMainLoop(EngineState* engine);
 void frameStep(void* arg);
+void RenderGame(EngineState* engine)
 Uint32 GetTicks();
 TurboHybrid::GameObject* player;
 TurboHybrid::GameObject* collider;
 TurboHybrid::GameObject* background;
 const Uint32 MAX_GAME_OBJECTS = 500;
+const uint32_t WIDTH = 640;
+const uint32_t HEIGHT = 480;
 
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
 Uint32 numOfSpawnedObjects = 0;
 
 int main(int argc, char* argv[])
 {
-    const uint32_t WIDTH = 640;
-    const uint32_t HEIGHT = 480;
+    WIDTH = 640;
+    HEIGHT = 480;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
 
@@ -238,8 +245,23 @@ void frameStep(void* arg)
     
     //Prep next frame?
     //SDL_RenderPresent(engine->renderer);
-    //bgfx::touch(0);
+
+    // do rendering
+    bgfx::touch(0);
+
+    const glm::vec3 at = { 0.0f, 0.0f,  0.0f };
+    const glm::vec3 eye = { 0.0f, 0.0f, -5.0f };
+    const glm::vec3 up = { 0.0f, 1.0f, 0.0f };
+    glm::mat4x4 view = glm::lookAt(eye, at, up);
+    glm::mat4x4 proj = glm::perspective(60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
+    bgfx::setViewTransform(0, view, proj);
+
+    bgfx::setVertexBuffer(0, vbh);
+    bgfx::setIndexBuffer(ibh);
+
     bgfx::frame();
+
+    // end rendering
 
     engine->stack->clear();
 
