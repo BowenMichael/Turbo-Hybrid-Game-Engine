@@ -32,6 +32,17 @@
 #include "FileParser.h"
 #include <bgfx/include/bgfx/platform.h>
 #include "bgfx/include/bgfx/bgfx.h"
+#include <fstream>
+//#include "raymath.h"
+
+#define MATH_3D_IMPLEMENTATION
+#include <math_3d.h>
+
+//#include <bx/bx.h>
+
+//#include <bx/include/bx/math.h>
+
+
 
 
 #ifdef _DEBUG
@@ -67,10 +78,59 @@ const Uint32 MAX_GAME_OBJECTS = 500;
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
 Uint32 numOfSpawnedObjects = 0;
 
+struct PosColorVertex
+{
+    float x;
+    float y;
+    float z;
+    uint32_t abgr;
+};
+
+static PosColorVertex cubeVertices[] =
+{
+    {-1.0f,  1.0f,  1.0f, 0xff000000 },
+    { 1.0f,  1.0f,  1.0f, 0xff0000ff },
+    {-1.0f, -1.0f,  1.0f, 0xff00ff00 },
+    { 1.0f, -1.0f,  1.0f, 0xff00ffff },
+    {-1.0f,  1.0f, -1.0f, 0xffff0000 },
+    { 1.0f,  1.0f, -1.0f, 0xffff00ff },
+    {-1.0f, -1.0f, -1.0f, 0xffffff00 },
+    { 1.0f, -1.0f, -1.0f, 0xffffffff },
+};
+
+static const uint16_t cubeTriList[] =
+{
+    0, 1, 2,
+    1, 3, 2,
+    4, 6, 5,
+    5, 6, 7,
+    0, 2, 4,
+    4, 2, 6,
+    1, 5, 3,
+    5, 7, 3,
+    0, 4, 1,
+    4, 5, 1,
+    2, 3, 6,
+    6, 3, 7,
+};
+
+
+bgfx::ProgramHandle m_program;
+void render(EngineState* engine);
+bgfx::ShaderHandle loadShader(const char* FILENAME);
+
+bgfx::VertexBufferHandle m_vbh;
+bgfx::IndexBufferHandle m_ibh[1];
+const uint32_t WIDTH = 640;
+const uint32_t HEIGHT = 480;
+bgfx::ShaderHandle vsh;
+bgfx::ShaderHandle fsh;
+bgfx::VertexBufferHandle vbh; 
+bgfx::IndexBufferHandle ibh;
+
 int main(int argc, char* argv[])
 {
-    const uint32_t WIDTH = 640;
-    const uint32_t HEIGHT = 480;
+
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
 
@@ -83,7 +143,7 @@ int main(int argc, char* argv[])
     }
     else {
         //Create a window
-        window = SDL_CreateWindow("BGFX Tutorial",
+        window = SDL_CreateWindow("TurboHybrid Engine",
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
             WIDTH, HEIGHT,
@@ -113,9 +173,25 @@ int main(int argc, char* argv[])
 
     bgfx::setDebug(BGFX_DEBUG_TEXT /*| BGFX_DEBUG_STATS*/);
 
-    bgfx::setViewRect(0, 0, 0, uint16_t(WIDTH), uint16_t(HEIGHT));
 
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
+
+    bgfx::setViewRect(0, 0, 0, uint16_t(WIDTH), uint16_t(HEIGHT));
+
+    bgfx::VertexLayout pcvDecl;
+    pcvDecl.begin()
+        .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+        .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
+        .end();
+    vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
+    ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
+
+    unsigned int counter = 0;
+
+    vsh = loadShader("vs_cubes.bin");
+    fsh = loadShader("fs_cubes.bin");
+    m_program = bgfx::createProgram(vsh, fsh, true);
+
     bgfx::touch(0);
 
     char* buffer = DBG_NEW char[1024 * 1024 * 32];
@@ -239,13 +315,71 @@ void frameStep(void* arg)
     //Prep next frame?
     //SDL_RenderPresent(engine->renderer);
     //bgfx::touch(0);
-    bgfx::frame();
+    render(engine);
 
     engine->stack->clear();
+
+}
+
+void render(EngineState* engine) {
+    
+    //const Vector3 at = { 0.0f, 0.0f,  0.0f };
+    //const Vector3 eye = { 0.0f, 0.0f, -5.0f };
+    //const Vector3 up = { 0.0f, 1.0f, 0.0f };
+    ////float view[16]{};
+
+    //Matrix view = MatrixLookAt(eye, at, up);
+    //
+    ////bx::mtxLookAt(view, eye, at);
+    ////float proj[16];
+    //Matrix proj = MatrixPerspective(60.0, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
+   
+    //bx::mtxProj(proj, 60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
+   //bgfx::setViewTransform(0, &view, &proj);
+    bgfx::setViewRect(0, 0, 0, uint16_t(WIDTH), uint16_t(HEIGHT));
+
+    vec3_t at = vec3(0.0f, 0.0f, 0.0f);
+    vec3_t eye = vec3(0.0f, 0.0f, -5.0f);
+    vec3_t up = vec3(0.0f, 1.0f, 0.0f);
+    mat4_t view;
+    view = m4_look_at(eye, at, up);
+    mat4_t proj;
+    proj = m4_perspective(60.0f, (float)(WIDTH) / (float)(HEIGHT), 0.01f, 1000.f);
+
+    bgfx::setViewTransform(0, &view, &proj);
+
+    bgfx::setVertexBuffer(0, vbh);
+    bgfx::setIndexBuffer(ibh);
+
+    bgfx::submit(0, m_program);
+    //bgfx::frame();
+    //counter++;
+    bgfx::frame();
 
 }
 
 Uint32 GetTicks()
 {
     return SDL_GetTicks();
+}
+
+bgfx::ShaderHandle loadShader(const char* FILENAME)
+{
+    char* data = new char[2048];
+    std::ifstream file;
+    size_t fileSize;
+    file.open(FILENAME);
+    if (file.is_open()) {
+        file.seekg(0, std::ios::end);
+        fileSize = file.tellg();
+        file.seekg(0, std::ios::beg);
+        file.read(data, fileSize);
+        file.close();
+    }
+    const bgfx::Memory* mem = bgfx::copy(data, fileSize + 1);
+    mem->data[mem->size - 1] = '\0';
+    bgfx::ShaderHandle handle = bgfx::createShader(mem);
+    bgfx::setName(handle, FILENAME);
+    return handle;
+    
 }
