@@ -64,14 +64,11 @@ struct EngineState
 
 void runMainLoop(EngineState* engine);
 void frameStep(void* arg);
-void RenderGame(EngineState* engine)
 Uint32 GetTicks();
 TurboHybrid::GameObject* player;
 TurboHybrid::GameObject* collider;
 TurboHybrid::GameObject* background;
 const Uint32 MAX_GAME_OBJECTS = 500;
-const uint32_t WIDTH = 640;
-const uint32_t HEIGHT = 480;
 
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
 Uint32 numOfSpawnedObjects = 0;
@@ -325,14 +322,14 @@ void frameStep(void* arg)
 void render(EngineState* engine) {
     
         // do rendering
-    bgfx::touch(0);
+    //bgfx::touch(0);
 
     const glm::vec3 at = { 0.0f, 0.0f,  0.0f };
     const glm::vec3 eye = { 0.0f, 0.0f, -5.0f };
     const glm::vec3 up = { 0.0f, 1.0f, 0.0f };
     glm::mat4x4 view = glm::lookAt(eye, at, up);
     glm::mat4x4 proj = glm::perspective(60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
-    bgfx::setViewTransform(0, view, proj);
+    bgfx::setViewTransform(0, &view, &proj);
 
     bgfx::setVertexBuffer(0, vbh);
     bgfx::setIndexBuffer(ibh);
@@ -353,21 +350,35 @@ Uint32 GetTicks()
 
 bgfx::ShaderHandle loadShader(const char* FILENAME)
 {
-    char* data = new char[2048];
-    std::ifstream file;
-    size_t fileSize;
-    file.open(FILENAME);
-    if (file.is_open()) {
-        file.seekg(0, std::ios::end);
-        fileSize = file.tellg();
-        file.seekg(0, std::ios::beg);
-        file.read(data, fileSize);
-        file.close();
+    const char* shaderPath = "???";
+
+    switch (bgfx::getRendererType()) {
+    case bgfx::RendererType::Noop:
+    case bgfx::RendererType::Direct3D9:  shaderPath = "shaders/dx9/";   break;
+    case bgfx::RendererType::Direct3D11:
+    case bgfx::RendererType::Direct3D12: shaderPath = "shaders/dx11/";  break;
+    case bgfx::RendererType::Gnm:        shaderPath = "shaders/pssl/";  break;
+    case bgfx::RendererType::Metal:      shaderPath = "shaders/metal/"; break;
+    case bgfx::RendererType::OpenGL:     shaderPath = "shaders/glsl/";  break;
+    case bgfx::RendererType::OpenGLES:   shaderPath = "shaders/essl/";  break;
+    case bgfx::RendererType::Vulkan:     shaderPath = "shaders/spirv/"; break;
     }
-    const bgfx::Memory* mem = bgfx::copy(data, fileSize + 1);
+
+    size_t shaderLen = strlen(shaderPath);
+    size_t fileLen = strlen(FILENAME);
+    char* filePath = (char*)malloc(shaderLen + fileLen);
+    memcpy(filePath, shaderPath, shaderLen);
+    memcpy(&filePath[shaderLen], FILENAME, fileLen);
+
+    FILE* file = fopen(FILENAME, "rb");
+    fseek(file, 0, SEEK_END);
+    long fileSize = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    const bgfx::Memory* mem = bgfx::alloc(fileSize + 1);
+    fread(mem->data, 1, fileSize, file);
     mem->data[mem->size - 1] = '\0';
-    bgfx::ShaderHandle handle = bgfx::createShader(mem);
-    bgfx::setName(handle, FILENAME);
-    return handle;
-    
+    fclose(file);
+
+    return bgfx::createShader(mem);
 }
