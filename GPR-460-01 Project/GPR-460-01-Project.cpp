@@ -321,25 +321,30 @@ void frameStep(void* arg)
 
 void render(EngineState* engine) {
     
-        // do rendering
-    //bgfx::touch(0);
+    // construct view matrix
+    const glm::vec3 at = { 0, 0.0, 0.0f };              // reference point for the center of the scene
+    const glm::vec3 eye = { 0.0f, 0.0f, -5.0f };        // location of the eye/camera
+    const glm::vec3 up = { 0.0f, 1.0f, 0.0f };          // reference for up vector
+    glm::mat4x4 view = glm::lookAt(eye, at, up);        // view matrix is created
 
-    const glm::vec3 at = { 0.0f, 0.0f,  0.0f };
-    const glm::vec3 eye = { 0.0f, 0.0f, -5.0f };
-    const glm::vec3 up = { 0.0f, 1.0f, 0.0f };
-    glm::mat4x4 view = glm::lookAt(eye, at, up);
-    glm::mat4x4 proj = glm::perspective(60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
+    // create projection matrix using a perspective projection
+    glm::mat4x4 proj = glm::perspective(80.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
+
+    // set view and projection matrix
     bgfx::setViewTransform(0, &view, &proj);
+    
+    // set model matrix for the cube's individual location, rotation and scale
+    glm::mat4x4 model = glm::mat4(1.0f);                // init with no translation
+    //glm::rotate(model, 3.14f, glm::vec3(1.0));        // perform a rotation about the axis (1,1,1) (currently does not work)
+    bgfx::setTransform(&model);
 
+    // load shader programs
     bgfx::setVertexBuffer(0, vbh);
     bgfx::setIndexBuffer(ibh);
 
+    // render and submit the frame to BGFX
     bgfx::frame();
-
     bgfx::submit(0, m_program);
-    //bgfx::frame();
-    //counter++;
-    bgfx::frame();
 
 }
 
