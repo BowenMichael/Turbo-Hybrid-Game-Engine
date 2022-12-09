@@ -39,6 +39,7 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include <gtc/matrix_transform.hpp>
+#include <gtx/transform.hpp>
 
 #ifdef _DEBUG
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -329,7 +330,15 @@ void render(EngineState* engine) {
     const glm::vec3 up = { 0.0f, 1.0f, 0.0f };
     glm::mat4x4 view = glm::lookAt(eye, at, up);
     glm::mat4x4 proj = glm::perspective(60.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
+   
+    //glm::mat4x4 trans = glm::mat4x4(1.0f);
+
+    glm::mat4x4 Model = glm::mat4(1.0);
+    //Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+    //Model = glm::rotate(Model, glm::radians(-45.0f), up);
     bgfx::setViewTransform(0, &view, &proj);
+
+    //bgfx::setTransform(&Model);
 
     bgfx::setVertexBuffer(0, vbh);
     bgfx::setIndexBuffer(ibh);
