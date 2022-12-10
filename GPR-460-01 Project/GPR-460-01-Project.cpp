@@ -95,18 +95,18 @@ static PosColorVertex cubeVertices[] =
 
 static const uint16_t cubeTriList[] =
 {
-    0, 1, 2,
-    1, 3, 2,
-    4, 6, 5,
-    5, 6, 7,
-    0, 2, 4,
-    4, 2, 6,
-    1, 5, 3,
-    5, 7, 3,
-    0, 4, 1,
-    4, 5, 1,
-    2, 3, 6,
-    6, 3, 7,
+    2, 1, 0, // 0
+    2, 3, 1,
+    5, 6, 4, // 2
+    7, 6, 5,
+    4, 2, 0, // 4
+    6, 2, 4,
+    3, 5, 1, // 6
+    3, 7, 5,
+    1, 4, 0, // 8
+    1, 5, 4,
+    6, 3, 2, // 10
+    7, 3, 6,
 };
 
 
@@ -125,11 +125,19 @@ bgfx::IndexBufferHandle ibh;
 
 int main(int argc, char* argv[])
 {
-    SDL_Window* window = NULL;
-    SDL_Renderer* renderer = NULL;
+    /*
+        System init
+    */
 
     TurboHybrid::System* system = TurboHybrid::System::Create();
     system->Init();
+
+    /*
+        SDL init
+    */
+
+    SDL_Window* window = NULL;
+    SDL_Renderer* renderer = NULL;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n",
@@ -148,11 +156,16 @@ int main(int argc, char* argv[])
         }
     }
 
+    //get window information to pass along to bgfx
     SDL_SysWMinfo wmi;
     SDL_VERSION(&wmi.version);
     if (!SDL_GetWindowWMInfo(window, &wmi)) {
         return 1;
     }
+
+    /*
+        BGFX init
+    */
 
     bgfx::Init init;
     init.type = bgfx::RendererType::Count;
@@ -163,30 +176,35 @@ int main(int argc, char* argv[])
     init.resolution.reset = BGFX_RESET_VSYNC;
     bgfx::init(init);
 
+    //clear buffers
     bgfx::reset(WIDTH, HEIGHT, BGFX_RESET_VSYNC);
 
     bgfx::setDebug(BGFX_DEBUG_TEXT /*| BGFX_DEBUG_STATS*/);
 
-
+    //init view window
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
-
     bgfx::setViewRect(0, 0, 0, uint16_t(WIDTH), uint16_t(HEIGHT));
 
+    //set up vertex buffers from defined data for each object.
     bgfx::VertexLayout pcvDecl;
-    pcvDecl.begin()
+    pcvDecl
+        .begin()
         .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
         .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
         .end();
     vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
     ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
-    unsigned int counter = 0;
-
+    //load shaders
     vsh = loadShader("vs_cubes.bin");
     fsh = loadShader("fs_cubes.bin");
     m_program = bgfx::createProgram(vsh, fsh, true);
 
     bgfx::touch(0);
+
+    /*
+        Engine init
+    */
 
     char* buffer = DBG_NEW char[1024 * 1024 * 32];
     TurboHybrid::StackAllocator* stack = DBG_NEW TurboHybrid::StackAllocator(1024 * 1024 * 32, buffer);
@@ -322,19 +340,40 @@ void frameStep(void* arg)
 void render(EngineState* engine) {
     
     // construct view matrix
-    const glm::vec3 at = { 0, 0.0, 0.0f };              // reference point for the center of the scene
+    const glm::vec3 at = { 0.0, 0.0, 0.0f };              // reference point for the center of the scene
     const glm::vec3 eye = { 0.0f, 0.0f, -5.0f };        // location of the eye/camera
     const glm::vec3 up = { 0.0f, 1.0f, 0.0f };          // reference for up vector
     glm::mat4x4 view = glm::lookAt(eye, at, up);        // view matrix is created
 
     // create projection matrix using a perspective projection
     glm::mat4x4 proj = glm::perspective(80.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
+    //glm::mat4x4 proj = glm::perspectiveFov(80.0f, float(WIDTH), float(HEIGHT), 0.1f, 100.0f);
+    //glm::mat4x4 proj = glm::perspective(80.0f, float(WIDTH), float(HEIGHT), 0.1f, 100.0f);
 
     // set view and projection matrix
     bgfx::setViewTransform(0, &view, &proj);
-    
+
+    /*
+        Render Objects
+    */
+
+    //set up render state for object
+    uint64_t state = 0
+        | (BGFX_STATE_WRITE_R)
+        | (BGFX_STATE_WRITE_G)
+        | (BGFX_STATE_WRITE_B)
+        | (BGFX_STATE_WRITE_A)
+        | BGFX_STATE_WRITE_Z
+        | BGFX_STATE_DEPTH_TEST_LESS
+        | BGFX_STATE_CULL_CW
+        | BGFX_STATE_MSAA
+        | UINT64_C(0)
+        ;
+
     // set model matrix for the cube's individual location, rotation and scale
-    glm::mat4x4 model = glm::mat4(1.0f);                // init with no translation
+    glm::mat4x4 model = glm::mat4(1.0f); // init with no translation
+    model = glm::translate(model, glm::vec3(0.0, 0.0f, 0.0f));
+    model = glm::rotate(model, engine->frame / 100.0f, glm::vec3(1.0f, 1.0f, 0.0f));// (model, glm::vec3(0.0, -5.0f, 0.0f));
     //glm::rotate(model, 3.14f, glm::vec3(1.0));        // perform a rotation about the axis (1,1,1) (currently does not work)
     bgfx::setTransform(&model);
 
@@ -342,9 +381,17 @@ void render(EngineState* engine) {
     bgfx::setVertexBuffer(0, vbh);
     bgfx::setIndexBuffer(ibh);
 
-    // render and submit the frame to BGFX
-    bgfx::frame();
+    // Set render states.
+    bgfx::setState(state);
+
     bgfx::submit(0, m_program);
+
+    /*
+        Render next frame
+    */
+
+    bgfx::frame();
+    
 
 }
 
