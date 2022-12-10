@@ -339,6 +339,10 @@ void frameStep(void* arg)
 
 void render(EngineState* engine) {
     
+    /*
+        Set up view projection matrix
+    */
+
     // construct view matrix
     const glm::vec3 at = { 0.0, 0.0, 0.0f };              // reference point for the center of the scene
     const glm::vec3 eye = { 0.0f, 0.0f, -5.0f };        // location of the eye/camera
@@ -347,14 +351,12 @@ void render(EngineState* engine) {
 
     // create projection matrix using a perspective projection
     glm::mat4x4 proj = glm::perspective(80.0f, float(WIDTH) / float(HEIGHT), 0.1f, 100.0f);
-    //glm::mat4x4 proj = glm::perspectiveFov(80.0f, float(WIDTH), float(HEIGHT), 0.1f, 100.0f);
-    //glm::mat4x4 proj = glm::perspective(80.0f, float(WIDTH), float(HEIGHT), 0.1f, 100.0f);
 
     // set view and projection matrix
     bgfx::setViewTransform(0, &view, &proj);
 
     /*
-        Render Objects
+        Render Cube components
     */
 
     //set up render state for object
@@ -385,6 +387,12 @@ void render(EngineState* engine) {
     bgfx::setState(state);
 
     bgfx::submit(0, m_program);
+
+    /*
+        Other mesh rendering
+    */
+
+    //render your other mesh
 
     /*
         Render next frame
