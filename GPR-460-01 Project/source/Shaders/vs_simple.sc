@@ -1,5 +1,5 @@
 $input a_position, a_normal, a_color0
-$output v_color0, v_normal
+$output v_color0, v_normal, v_wpos
 
 #include "../../include/bgfx/tools/texturev/common.sh"
 
