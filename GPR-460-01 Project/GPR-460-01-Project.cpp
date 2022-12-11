@@ -78,35 +78,72 @@ struct VertexData
     float x;
     float y;
     float z;
+    float nX;
+    float nY;
+    float nZ;
     uint32_t abgr;
 };
 
 static VertexData cubeVertices[] =
 {
-    {-1.0f,  1.0f,  1.0f, 0xff000000 },
-    { 1.0f,  1.0f,  1.0f, 0xff0000ff },
-    {-1.0f, -1.0f,  1.0f, 0xff00ff00 },
-    { 1.0f, -1.0f,  1.0f, 0xff00ffff },
-    {-1.0f,  1.0f, -1.0f, 0xffff0000 },
-    { 1.0f,  1.0f, -1.0f, 0xffff00ff },
-    {-1.0f, -1.0f, -1.0f, 0xffffff00 },
-    { 1.0f, -1.0f, -1.0f, 0xffffffff },
+    {-1.0f,  1.0f,  1.0f, 0.0f,  0.0f,  1.0f, 0xffffffff },
+    { 1.0f,  1.0f,  1.0f, 0.0f,  0.0f,  1.0f, 0xffffffff },
+    {-1.0f, -1.0f,  1.0f, 0.0f,  0.0f,  1.0f, 0xffffffff },
+    { 1.0f, -1.0f,  1.0f, 0.0f,  0.0f,  1.0f, 0xffffffff },
+    {-1.0f,  1.0f, -1.0f, 0.0f,  0.0f, -1.0f, 0xffffffff },
+    { 1.0f,  1.0f, -1.0f, 0.0f,  0.0f, -1.0f, 0xffffffff },
+    {-1.0f, -1.0f, -1.0f, 0.0f,  0.0f, -1.0f, 0xffffffff },
+    { 1.0f, -1.0f, -1.0f, 0.0f,  0.0f, -1.0f, 0xffffffff },
+    {-1.0f,  1.0f,  1.0f, 0.0f,  1.0f,  0.0f, 0xffffffff },
+    { 1.0f,  1.0f,  1.0f, 0.0f,  1.0f,  0.0f, 0xffffffff },
+    {-1.0f,  1.0f, -1.0f, 0.0f,  1.0f,  0.0f, 0xffffffff },
+    { 1.0f,  1.0f, -1.0f, 0.0f,  1.0f,  0.0f, 0xffffffff },
+    {-1.0f, -1.0f,  1.0f, 0.0f, -1.0f,  0.0f, 0xffffffff },
+    { 1.0f, -1.0f,  1.0f, 0.0f, -1.0f,  0.0f, 0xffffffff },
+    {-1.0f, -1.0f, -1.0f, 0.0f, -1.0f,  0.0f, 0xffffffff },
+    { 1.0f, -1.0f, -1.0f, 0.0f, -1.0f,  0.0f, 0xffffffff },
+    { 1.0f, -1.0f,  1.0f, 1.0f,  0.0f,  0.0f, 0xffffffff },
+    { 1.0f,  1.0f,  1.0f, 1.0f,  0.0f,  0.0f, 0xffffffff },
+    { 1.0f, -1.0f, -1.0f, 1.0f,  0.0f,  0.0f, 0xffffffff },
+    { 1.0f,  1.0f, -1.0f, 1.0f,  0.0f,  0.0f, 0xffffffff },
+    {-1.0f, -1.0f,  1.0f, -1.0f, 0.0f,  0.0f, 0xffffffff },
+    {-1.0f,  1.0f,  1.0f, -1.0f, 0.0f,  0.0f, 0xffffffff },
+    {-1.0f, -1.0f, -1.0f, -1.0f, 0.0f,  0.0f, 0xffffffff },
+    {-1.0f,  1.0f, -1.0f, -1.0f, 0.0f,  0.0f, 0xffffffff },
 };
 
 static const uint16_t cubeTriList[] =
 {
-    2, 1, 0, // 0
-    2, 3, 1,
-    5, 6, 4, // 2
-    7, 6, 5,
-    4, 2, 0, // 4
-    6, 2, 4,
-    3, 5, 1, // 6
-    3, 7, 5,
-    1, 4, 0, // 8
-    1, 5, 4,
-    6, 3, 2, // 10
-    7, 3, 6,
+   0,  2,  1,
+     1,  2,  3,
+     4,  5,  6,
+     5,  7,  6,
+
+     9, 10,  8,
+     11, 10, 9,
+    14, 13, 12,
+    14, 15, 13,
+
+    16, 18, 17,
+    17, 18, 19,
+    20, 21, 22,
+    21, 23, 22,
+    
+
+     /*1,  2,  0,
+     3,  2,  1,
+     6,  5,  4,
+     6,  7,  5,
+
+     9, 10,  8,
+     11, 10, 9,
+    14, 13, 12,
+    14, 15, 13,
+
+    17, 18, 16,
+    19, 18, 17,
+    22, 21, 20,
+    22, 23, 21,*/
 };
 
 
@@ -190,6 +227,7 @@ int main(int argc, char* argv[])
     pcvDecl
         .begin()
         .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+        .add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float, true)
         .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
         .end();
     vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
