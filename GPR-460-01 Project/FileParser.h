@@ -22,6 +22,7 @@ namespace Turbohybrid
 		void LoadColliderData(TurboHybrid::RectangleCollider* collider, const json& data);
 		void LoadPlayerControllerData(TurboHybrid::PlayerController* plr, const json& data);
 		void LoadColorColliderData(TurboHybrid::ColliderColorChanger* cccr, const json& data);
+		void LoadCubeRendererData(TurboHybrid::CubeRenderer* cube, const json& data);
 
 		
 		size_t GetNumOfGameObjects();

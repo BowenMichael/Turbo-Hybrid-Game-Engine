@@ -27,6 +27,8 @@ namespace TurboHybrid {
 		void TranslateRect(const Vector3& dir);
 	protected:
 		Vector3 location;
+		Vector3 rotation;
+		Vector3 size;
 	};
 }
 

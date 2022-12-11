@@ -9,7 +9,7 @@ namespace TurboHybrid {
 	class RectangleCollider;
 	class PlayerController;
 	class ColliderColorChanger;
-
+	class CubeRenderer;
 	class GameObject
 	{
 	public:
@@ -24,6 +24,7 @@ namespace TurboHybrid {
 		
 		void SetTransform(Transform* transform) { mTransform = transform; };
 		void SetRenderer(RectangleRenderer* rectRend) { mRenderer = rectRend; };
+		void SetCubeRenderer(CubeRenderer* cubeRend) { mCubeRenderer = cubeRend; };
 		void SetCollider(RectangleCollider* rectCol) { mCollider = rectCol; };
 		void SetPlayerController(PlayerController* plc) { mPlayer = plc; };
 		void SetColliderColorChanger(ColliderColorChanger* colorChanger) { mColorChanger = colorChanger; };
@@ -33,6 +34,7 @@ namespace TurboHybrid {
 		RectangleRenderer* GetRenderer() { return mRenderer; };
 		PlayerController* GetPlayerController() { return mPlayer; };
 		ColliderColorChanger* GetColorChanger() { return mColorChanger; };
+		CubeRenderer* GetCubeRenderer() { return mCubeRenderer; };
 
 		bool CheckCollision(GameObject* other);
 		void OnCollisionWithOther(RectangleCollider* other);
@@ -41,6 +43,7 @@ namespace TurboHybrid {
 	protected:
 		Transform* mTransform;
 		RectangleRenderer* mRenderer;
+		CubeRenderer* mCubeRenderer;
 		RectangleCollider* mCollider;
 		PlayerController* mPlayer;
 		ColliderColorChanger* mColorChanger;

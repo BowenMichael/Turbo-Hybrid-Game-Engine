@@ -90,6 +90,9 @@
     <ClCompile Include="FileParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\Components\CubeRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Headers\System_Common.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="FileParser.h">
       <Filter>Header Files\System\File Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\Components\CubeRenderer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

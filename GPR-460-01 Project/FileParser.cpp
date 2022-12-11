@@ -88,6 +88,11 @@ void Turbohybrid::FileParser::LoadColorColliderData(TurboHybrid::ColliderColorCh
 	cccr->load(Color(color[0], color[1], color[2], color[3]));
 }
 
+void Turbohybrid::FileParser::LoadCubeRendererData(TurboHybrid::CubeRenderer* cube, const json& data)
+{
+	cube->load();
+}
+
 size_t Turbohybrid::FileParser::GetNumOfGameObjects()
 {
 	return mData.at("GameObjects").size();
@@ -100,6 +105,7 @@ void Turbohybrid::FileParser::DeserializeGameobject(TurboHybrid::GameObject* gam
 	for (json::iterator it = gameobject.begin(); it != gameobject.end(); ++it) {
 		if ((int)it.key().size() == 4) {
 			Uint32 i = charsToIntLiteral((unsigned char*)(it.key().c_str()));
+			//allocate based on id
 			allocator->AddComponentToGameObject(i, gameObject);
 			std::cout << it.key() << ", " << it.key().c_str() << " : " << it.value() << "\n";
 
@@ -118,6 +124,9 @@ void Turbohybrid::FileParser::DeserializeGameobject(TurboHybrid::GameObject* gam
 				break;
 			case TurboHybrid::ColliderColorChanger::kCompID:
 				LoadColorColliderData(gameObject->GetColorChanger(), it.value());
+				break;
+			case TurboHybrid::CubeRenderer::kCompID:
+				LoadCubeRendererData(gameObject->GetCubeRenderer(), it.value());
 				break;
 			default:
 				break;

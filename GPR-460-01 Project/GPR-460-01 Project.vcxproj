@@ -136,6 +136,7 @@
     <ClCompile Include="source\Allocators\StackAllocator.cpp" />
     <ClCompile Include="source\Components\ColliderColorChanger.cpp" />
     <ClCompile Include="source\Components\Component_System.cpp" />
+    <ClCompile Include="source\Components\CubeRenderer.cpp" />
     <ClCompile Include="source\Components\PlayerController.cpp" />
     <ClCompile Include="source\Components\RectangleCollider.cpp" />
     <ClCompile Include="source\Components\RectangleRenderer.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="source\headers\Components\ColliderColorChanger.h" />
     <ClInclude Include="source\headers\Components\Component_Common.h" />
     <ClInclude Include="source\headers\Components\Component_System.h" />
+    <ClInclude Include="source\headers\Components\CubeRenderer.h" />
     <ClInclude Include="source\headers\Components\PlayerController.h" />
     <ClInclude Include="source\headers\Components\RectangleCollider.h" />
     <ClInclude Include="source\headers\Components\RectangleRenderer.h" />

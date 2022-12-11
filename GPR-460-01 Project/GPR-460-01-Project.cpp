@@ -55,11 +55,9 @@ struct EngineState
     SDL_Window* window;
     TurboHybrid::System* system;
     TurboHybrid::StackAllocator* stack;
-
     Uint32 frameStart;
     bool quit;
     int frame;
-
 };
 
 void runMainLoop(EngineState* engine);
@@ -69,7 +67,6 @@ TurboHybrid::GameObject* player;
 TurboHybrid::GameObject* collider;
 TurboHybrid::GameObject* background;
 const Uint32 MAX_GAME_OBJECTS = 500;
-
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
 Uint32 numOfSpawnedObjects = 0;
 
@@ -150,6 +147,7 @@ int main(int argc, char* argv[])
             SDL_WINDOWPOS_UNDEFINED,
             WIDTH, HEIGHT,
             SDL_WINDOW_SHOWN);
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         if (window == NULL) {
             printf("Window could not be created! SDL_Error: %s\n",
                 SDL_GetError());
@@ -178,14 +176,13 @@ int main(int argc, char* argv[])
 
     //clear buffers
     bgfx::reset(WIDTH, HEIGHT, BGFX_RESET_VSYNC);
-
     bgfx::setDebug(BGFX_DEBUG_TEXT /*| BGFX_DEBUG_STATS*/);
 
     //init view window
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, uint16_t(WIDTH), uint16_t(HEIGHT));
 
-    //set up vertex buffers from defined data for each object.
+    //load bufferes
     bgfx::VertexLayout pcvDecl;
     pcvDecl
         .begin()
@@ -194,6 +191,7 @@ int main(int argc, char* argv[])
         .end();
     vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
     ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
+
 
     //load shaders
     vsh = loadShader("vs_cubes.bin");
@@ -212,6 +210,7 @@ int main(int argc, char* argv[])
     TurboHybrid::ComponentSystem::InitInstance();
     TurboHybrid::ComponentSystem* world = TurboHybrid::ComponentSystem::GetComponentSystem();
 
+
     EngineState engine;
     engine.quit = false;
     engine.renderer = renderer;
@@ -221,6 +220,8 @@ int main(int argc, char* argv[])
     engine.window = window;
     engine.viewport = {};
     engine.stack = stack;
+
+    TurboHybrid::ComponentSystem::assignCubeBuffers(vbh, ibh, m_program);
 
     /*
         init from file
@@ -242,6 +243,7 @@ int main(int argc, char* argv[])
 
     runMainLoop(&engine);
 
+      SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
@@ -260,11 +262,12 @@ int main(int argc, char* argv[])
     delete stack;
 
     TurboHybrid::ComponentSystem::DeleteInstance();
+    bgfx::shutdown();
 
     system->Shutdown();
     delete system;
 
-    bgfx::shutdown();
+
     
 
     return 0;
@@ -316,22 +319,9 @@ void frameStep(void* arg)
         }
     }
 
-  
-    //clear screen
-    
-    //SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    //SDL_RenderClear(engine->renderer);
+    TurboHybrid::ComponentSystem::GetComponentSystem()->update(engine->frame);
 
-    //TurboHybrid::ComponentSystem::GetComponentSystem()->render(engine->renderer);
-    
-    //Prep next frame?
-    //SDL_RenderPresent(engine->renderer);
-
-    //bgfx::touch(0);
     render(engine);
-
-
-    // end rendering
 
     engine->stack->clear();
 
@@ -340,11 +330,22 @@ void frameStep(void* arg)
 void render(EngineState* engine) {
     
     /*
+        SDL Render
+    */
+    SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(engine->renderer);
+
+    TurboHybrid::ComponentSystem::GetComponentSystem()->render(engine->renderer);
+
+    //Prep next frame?
+    SDL_RenderPresent(engine->renderer);
+
+    /*
         Set up view projection matrix
     */
 
     // construct view matrix
-    const glm::vec3 at = { 0.0, 0.0, 0.0f };              // reference point for the center of the scene
+    const glm::vec3 at = gameObjects[0]->GetTransform()->GetLocation().Vec3();              // reference point for the center of the scene
     const glm::vec3 eye = { 0.0f, 0.0f, -5.0f };        // location of the eye/camera
     const glm::vec3 up = { 0.0f, 1.0f, 0.0f };          // reference for up vector
     glm::mat4x4 view = glm::lookAt(eye, at, up);        // view matrix is created
@@ -359,34 +360,7 @@ void render(EngineState* engine) {
         Render Cube components
     */
 
-    //set up render state for object
-    uint64_t state = 0
-        | (BGFX_STATE_WRITE_R)
-        | (BGFX_STATE_WRITE_G)
-        | (BGFX_STATE_WRITE_B)
-        | (BGFX_STATE_WRITE_A)
-        | BGFX_STATE_WRITE_Z
-        | BGFX_STATE_DEPTH_TEST_LESS
-        | BGFX_STATE_CULL_CW
-        | BGFX_STATE_MSAA
-        | UINT64_C(0)
-        ;
-
-    // set model matrix for the cube's individual location, rotation and scale
-    glm::mat4x4 model = glm::mat4(1.0f); // init with no translation
-    model = glm::translate(model, glm::vec3(0.0, 0.0f, 0.0f));
-    model = glm::rotate(model, engine->frame / 100.0f, glm::vec3(1.0f, 1.0f, 0.0f));// (model, glm::vec3(0.0, -5.0f, 0.0f));
-    //glm::rotate(model, 3.14f, glm::vec3(1.0));        // perform a rotation about the axis (1,1,1) (currently does not work)
-    bgfx::setTransform(&model);
-
-    // load shader programs
-    bgfx::setVertexBuffer(0, vbh);
-    bgfx::setIndexBuffer(ibh);
-
-    // Set render states.
-    bgfx::setState(state);
-
-    bgfx::submit(0, m_program);
+    TurboHybrid::ComponentSystem::GetComponentSystem()->renderCubes(engine->frame);
 
     /*
         Other mesh rendering
@@ -399,6 +373,8 @@ void render(EngineState* engine) {
     */
 
     bgfx::frame();
+
+
     
 
 }

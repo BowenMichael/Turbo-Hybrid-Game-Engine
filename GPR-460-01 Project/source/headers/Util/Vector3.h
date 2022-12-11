@@ -1,4 +1,8 @@
 #pragma once
+// math
+#include <vec3.hpp>
+#include <mat4x4.hpp>
+#include <gtc/matrix_transform.hpp>
 
 namespace TurboHybrid {
 	struct Vector3 {
@@ -22,6 +26,17 @@ namespace TurboHybrid {
 			this->y += rhs.y;
 			this->z += rhs.z;
 			return *this;
+		}
+
+		Vector3& operator*(const float& rhs) {
+			this->x *= rhs;
+			this->y *= rhs;
+			this->z *= rhs;
+			return *this;
+		}
+
+		glm::vec3 Vec3() {
+			return glm::vec3(x, y, z);
 		}
 
 		float x;
