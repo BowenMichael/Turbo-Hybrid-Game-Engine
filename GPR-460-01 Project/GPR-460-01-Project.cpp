@@ -73,7 +73,7 @@ const Uint32 MAX_GAME_OBJECTS = 500;
 TurboHybrid::GameObject* gameObjects[MAX_GAME_OBJECTS];
 Uint32 numOfSpawnedObjects = 0;
 
-struct PosColorVertex
+struct VertexData
 {
     float x;
     float y;
@@ -81,7 +81,7 @@ struct PosColorVertex
     uint32_t abgr;
 };
 
-static PosColorVertex cubeVertices[] =
+static VertexData cubeVertices[] =
 {
     {-1.0f,  1.0f,  1.0f, 0xff000000 },
     { 1.0f,  1.0f,  1.0f, 0xff0000ff },
@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
     */
 
     bgfx::Init init;
-    init.type = bgfx::RendererType::Count;
+    init.type = bgfx::RendererType::OpenGL;
     init.platformData.nwh = wmi.info.win.window;
     init.platformData.ndt = NULL;
     init.resolution.width = WIDTH;
@@ -196,8 +196,8 @@ int main(int argc, char* argv[])
     ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
     //load shaders
-    vsh = loadShader("vs_cubes.bin");
-    fsh = loadShader("fs_cubes.bin");
+    vsh = loadShader("shaders/vs_simple.bin");
+    fsh = loadShader("shaders/fs_simple.bin");
     m_program = bgfx::createProgram(vsh, fsh, true);
 
     bgfx::touch(0);
@@ -379,7 +379,7 @@ void render(EngineState* engine) {
     //glm::rotate(model, 3.14f, glm::vec3(1.0));        // perform a rotation about the axis (1,1,1) (currently does not work)
     bgfx::setTransform(&model);
 
-    // load shader programs
+    // apply vertex buffer to this object
     bgfx::setVertexBuffer(0, vbh);
     bgfx::setIndexBuffer(ibh);
 
