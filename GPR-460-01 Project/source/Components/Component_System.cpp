@@ -71,6 +71,17 @@ TurboHybrid::RectangleRenderer* TurboHybrid::ComponentSystem::allocateRectangleR
 	return nullptr;
 }
 
+TurboHybrid::CubeRenderer* TurboHybrid::ComponentSystem::allocateCubeRenderer()
+{
+	mComponents.sNumOfCubeRenderers++;
+	if (mComponents.sNumOfCubeRenderers <= MAX_COMPONENTS) {
+		CubeRenderer* renderer = &mComponents.sCubeRenderer[mComponents.sNumOfCubeRenderers - 1];
+		return renderer;
+	}
+	SDL_assert(false);
+	return nullptr;
+}
+
 TurboHybrid::Transform* TurboHybrid::ComponentSystem::allocateTransform()
 {
 	mComponents.sNumOfTransforms++;
@@ -82,9 +93,15 @@ TurboHybrid::Transform* TurboHybrid::ComponentSystem::allocateTransform()
 	return nullptr;
 }
 
+void TurboHybrid::ComponentSystem::assignCubeBuffers(const bgfx::VertexBufferHandle& vbh, const bgfx::IndexBufferHandle& ibh, const bgfx::ProgramHandle& ph)
+{
+	for (int i = 0; i < MAX_COMPONENTS; i++) {
+		mComponents.sCubeRenderer[i].SetBuffers(vbh, ibh, ph);
+	}
+}
+
 void TurboHybrid::ComponentSystem::AddComponentToGameObject(const int& indexLiteral, GameObject* gameObject)
 {
-
 	mCreationMap[indexLiteral](gameObject, this);
 }
 
@@ -135,6 +152,7 @@ void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 
 		//rects[i] = r;
 	}
+	
 	Uint8 r, g, b, a;
 	//SDL_GetRenderDrawColor(sdlRenderer, &r, &g, &b, &a);
 	//SDL_SetRenderDrawColor(sdlRenderer, 75, 75, 75, 255);
@@ -143,6 +161,15 @@ void TurboHybrid::ComponentSystem::render(SDL_Renderer* sdlRenderer)
 	//SDL_RenderDrawRects(sdlRenderer, rects, mComponents.sNumOfRectangleRenderers);
 	//delete rects;
 	
+}
+
+void TurboHybrid::ComponentSystem::renderCubes(const float& deltatime)
+{
+	for (int i = mComponents.sNumOfCubeRenderers - 1; i >= 0; i--) {
+		CubeRenderer* renderer = &mComponents.sCubeRenderer[i];
+
+		renderer->render(deltatime);
+	}
 }
 
 TurboHybrid::ComponentSystem::ComponentSystem()
@@ -154,5 +181,6 @@ TurboHybrid::ComponentSystem::ComponentSystem()
 	REGISTER_COMPONENT(TurboHybrid::RectangleCollider);
 	REGISTER_COMPONENT(TurboHybrid::PlayerController);
 	REGISTER_COMPONENT(TurboHybrid::ColliderColorChanger);
+	REGISTER_COMPONENT(TurboHybrid::CubeRenderer);
 }
 

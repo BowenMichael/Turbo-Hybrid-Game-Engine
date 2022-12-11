@@ -5,6 +5,7 @@
 #include "headers/Components/RectangleCollider.h"
 #include "headers/Components/RectangleRenderer.h"
 #include "headers/Components/Transform.h"
+#include "headers/Components/CubeRenderer.h"
 
 #include <unordered_map>
 
@@ -25,6 +26,7 @@ namespace TurboHybrid {
 		ColliderColorChanger sCollorChangerComponents[MAX_COMPONENTS];
 		PlayerController sPlayerControllerComponents[MAX_COMPONENTS];
 		RectangleCollider sRectangleColliders[MAX_COMPONENTS];
+		CubeRenderer sCubeRenderer[MAX_COMPONENTS];
 		RectangleRenderer sRectangleRenderers[MAX_COMPONENTS];
 		Transform sTransforms[MAX_COMPONENTS];
 
@@ -32,6 +34,7 @@ namespace TurboHybrid {
 		int sNumOfPlayerControllers = 0;
 		int sNumOfRectangleColliders = 0;
 		int sNumOfRectangleRenderers = 0;
+		int sNumOfCubeRenderers = 0;
 		int sNumOfTransforms = 0;
 	};
 
@@ -51,12 +54,15 @@ namespace TurboHybrid {
 		static PlayerController* allocatePlayerController();
 		static RectangleCollider* allocateRectangleCollider();
 		static RectangleRenderer* allocateRectangleRenderer();
+		static CubeRenderer* allocateCubeRenderer();
 		static Transform* allocateTransform();
+		static void assignCubeBuffers(const bgfx::VertexBufferHandle& vbh, const bgfx::IndexBufferHandle& ibh, const bgfx::ProgramHandle& ph);
 
 		void AddComponentToGameObject(const int& indexLiteral, GameObject* gameObject);
 
 		static void update(const float& deltatime);
 		static void render(SDL_Renderer* sdlRenderer);
+		static void renderCubes(const float& deltatime);
 	private:
 		ComponentSystem();
 		static Components mComponents;

@@ -2,12 +2,16 @@
 #include <headers/GameObject.h>
 #include <headers/Components/Component_System.h>
 
-TurboHybrid::Transform::Transform()
+TurboHybrid::Transform::Transform():
+	rotation(Vector3(0.0f,0.0f,0.0f)),
+	size(Vector3(0.0f,0.0f,0.0f))
 {
 	Transform(0, 0, 0);
 }
 
-TurboHybrid::Transform::Transform(const float& x, const float& y, const float& z)
+TurboHybrid::Transform::Transform(const float& x, const float& y, const float& z) :
+	rotation(Vector3(0.0f, 0.0f, 0.0f)),
+	size(Vector3(0.0f, 0.0f, 0.0f))
 {
 	SetLocation(x, y, z);
 }

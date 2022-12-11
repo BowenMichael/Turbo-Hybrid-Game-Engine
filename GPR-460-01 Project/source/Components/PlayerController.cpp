@@ -4,12 +4,14 @@
 #include <headers/Components/Component_System.h>
 
 TurboHybrid::PlayerController::PlayerController()
-	:gameObject(nullptr)
+	:gameObject(nullptr),
+	mSpeed(0)
 {
 }
 
 TurboHybrid::PlayerController::PlayerController(GameObject* gameobject)
-	:gameObject(gameobject)
+	:gameObject(gameobject),
+	mSpeed(0)
 {
 }
 
@@ -24,24 +26,33 @@ void TurboHybrid::PlayerController::CreateComponent(TurboHybrid::GameObject* gm,
 	gm->SetPlayerController(tmp);
 }
 
-void TurboHybrid::PlayerController::load()
+void TurboHybrid::PlayerController::load(const float& speed)
 {
+	mSpeed = speed;
 }
 
 void TurboHybrid::PlayerController::update(const float& deltatime)
 {
 	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
+	Vector3 dir = Vector3();
 	if (keystate[SDL_SCANCODE_W]) {
-		gameObject->GetTransform()->TranslateRect(Vector3(0, -1, 0));
+		dir += Vector3(0, -1, 0);
 	}
 	if (keystate[SDL_SCANCODE_S]) {
-		gameObject->GetTransform()->TranslateRect(Vector3(0, 1, 0));
+		dir += Vector3(0, 1, 0);
 	}
 	if (keystate[SDL_SCANCODE_A]) {
-		gameObject->GetTransform()->TranslateRect(Vector3(-1, 0, 0));
+		dir += Vector3(-1, 0, 0);
 	}
 	if (keystate[SDL_SCANCODE_D]) {
-		gameObject->GetTransform()->TranslateRect(Vector3(1, 0, 0));
+		dir += Vector3(1, 0, 0);
 	}
+	if (keystate[SDL_SCANCODE_Q]) {
+		dir += Vector3(0, 0, 1);
+	}
+	if (keystate[SDL_SCANCODE_E]) {
+		dir += Vector3(0, 0, -1);
+	}
+	gameObject->GetTransform()->TranslateRect(dir * mSpeed);
 }

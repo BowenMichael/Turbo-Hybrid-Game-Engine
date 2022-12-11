@@ -10,6 +10,9 @@
 
 #include <string>
 #include <SDL.h>
+#include <bgfx/include/bgfx/platform.h>
+#include "bgfx/include/bgfx/bgfx.h"
+
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #else

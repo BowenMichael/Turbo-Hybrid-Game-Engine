@@ -13,7 +13,8 @@ TurboHybrid::GameObject::GameObject() :
 	mRenderer(nullptr),
 	mCollider(nullptr),
 	mPlayer(nullptr),
-	mColorChanger(nullptr)
+	mColorChanger(nullptr),
+	mCubeRenderer(nullptr)
 {
 	
 }
@@ -23,7 +24,8 @@ TurboHybrid::GameObject::GameObject(Transform* transform)
 	mRenderer(nullptr),
 	mCollider(nullptr),
 	mPlayer(nullptr),
-	mColorChanger(nullptr)
+	mColorChanger(nullptr),
+	mCubeRenderer(nullptr)
 {
 }
 
@@ -100,18 +102,24 @@ void TurboHybrid::GameObject::OnCollisionWithOther(RectangleCollider* other)
 
 void TurboHybrid::GameObject::Draw(SDL_Renderer* sdlRenderer)
 {
-	Rect rect = mRenderer->GetRect();
-	Color color = mRenderer->GetColor();
-	SDL_Rect r = {
-		static_cast<int>(mTransform->GetLocation().x + rect.width * .5f),
-		static_cast<int>(mTransform->GetLocation().y + rect.height * .5f),
-		static_cast<int>(rect.width),
-		static_cast<int>(rect.height)
-	};
+	if (mCubeRenderer != nullptr) {
 
-	SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(color.r * 255), (Uint8)(color.g * 255), (Uint8)(color.b * 255), (Uint8)(color.a * SDL_ALPHA_OPAQUE));
-	SDL_RenderDrawRect(sdlRenderer, &r);
-	SDL_RenderFillRect(sdlRenderer, &r);
+	}
+	else {
+		Rect rect = mRenderer->GetRect();
+		Color color = mRenderer->GetColor();
+		SDL_Rect r = {
+			static_cast<int>(mTransform->GetLocation().x + rect.width * .5f),
+			static_cast<int>(mTransform->GetLocation().y + rect.height * .5f),
+			static_cast<int>(rect.width),
+			static_cast<int>(rect.height)
+		};
+
+		SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(color.r * 255), (Uint8)(color.g * 255), (Uint8)(color.b * 255), (Uint8)(color.a * SDL_ALPHA_OPAQUE));
+		SDL_RenderDrawRect(sdlRenderer, &r);
+		SDL_RenderFillRect(sdlRenderer, &r);
+	}
+
 }
 
 //void TurboHybrid::GameObject::Update(const float& deltatime)
