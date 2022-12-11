@@ -56,7 +56,7 @@ namespace TurboHybrid {
 		static RectangleRenderer* allocateRectangleRenderer();
 		static CubeRenderer* allocateCubeRenderer();
 		static Transform* allocateTransform();
-		static void assignCubeBuffers(const bgfx::VertexBufferHandle& vbh, const bgfx::IndexBufferHandle& ibh, const bgfx::ProgramHandle& ph);
+		static void assignCubeBuffers(const bgfx::VertexBufferHandle& vbh, const bgfx::IndexBufferHandle& ibh, const bgfx::ProgramHandle& ph, const bgfx::UniformHandle& uh);
 
 		void AddComponentToGameObject(const int& indexLiteral, GameObject* gameObject);
 

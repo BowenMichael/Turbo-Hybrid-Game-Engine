@@ -20,13 +20,14 @@ namespace TurboHybrid {
 
 		static enum { kCompID = 'CUBE' };
 		static void CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator);
-		void load();
+		void load(const Color& color);
 		void render(const float& deltatime);
-		void SetBuffers(bgfx::VertexBufferHandle vbh,  bgfx::IndexBufferHandle ibh,  bgfx::ProgramHandle ph);
+		void SetBuffers(bgfx::VertexBufferHandle vbh,  bgfx::IndexBufferHandle ibh,  bgfx::ProgramHandle ph, bgfx::UniformHandle uh);
 
 		bgfx::VertexBufferHandle GetVetexBuffer() { return m_vbh; };
 		bgfx::IndexBufferHandle GetIndexBuffer() { return m_ibh; };
 		bgfx::ProgramHandle GetProgramHandle() { return m_program; };
+		bgfx::UniformHandle GetUniformHandle() { return m_uniform; };
 
 		
 
@@ -36,6 +37,9 @@ namespace TurboHybrid {
 		bgfx::IndexBufferHandle m_ibh;
 
 		bgfx::ProgramHandle m_program;
+		bgfx::UniformHandle m_uniform;
+
+		Color m_color;
 	};
 }
 

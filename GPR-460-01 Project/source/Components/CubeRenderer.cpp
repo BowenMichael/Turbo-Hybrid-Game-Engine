@@ -29,8 +29,9 @@ void TurboHybrid::CubeRenderer::CreateComponent(TurboHybrid::GameObject* gm, Tur
 	gm->SetCubeRenderer(tmp);
 }
 
-void TurboHybrid::CubeRenderer::load()
+void TurboHybrid::CubeRenderer::load(const Color& color)
 {
+	m_color = color;
 }
 
 void TurboHybrid::CubeRenderer::render(const float& deltatime)
@@ -62,6 +63,10 @@ void TurboHybrid::CubeRenderer::render(const float& deltatime)
 	//glm::rotate(model, 3.14f, glm::vec3(1.0));        // perform a rotation about the axis (1,1,1) (currently does not work)
 	bgfx::setTransform(&model);
 
+	float color[4] = { m_color.r, m_color.g, m_color.b, m_color.a };
+
+	bgfx::setUniform(m_uniform, color);
+
 	// load shader programs
 	bgfx::setVertexBuffer(0, m_vbh); //Vertex buffer could be shared on a per object basis to be consistent with the array of components system
 	bgfx::setIndexBuffer(m_ibh);
@@ -72,10 +77,11 @@ void TurboHybrid::CubeRenderer::render(const float& deltatime)
 	bgfx::submit(0, m_program);
 }
 
-void TurboHybrid::CubeRenderer::SetBuffers( bgfx::VertexBufferHandle vbh,  bgfx::IndexBufferHandle ibh,  bgfx::ProgramHandle ph)
+void TurboHybrid::CubeRenderer::SetBuffers( bgfx::VertexBufferHandle vbh,  bgfx::IndexBufferHandle ibh,  bgfx::ProgramHandle ph, bgfx::UniformHandle uh)
 {
 	m_vbh = vbh;
 	m_ibh = ibh;
 	m_program = ph;
+	m_uniform = uh;
 
 }

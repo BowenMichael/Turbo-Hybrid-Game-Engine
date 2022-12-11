@@ -230,6 +230,7 @@ int main(int argc, char* argv[])
     vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), pcvDecl);
     ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
+    bgfx::UniformHandle uh = bgfx::createUniform("u_base_color", bgfx::UniformType::Vec4);
 
     //load shaders
     vsh = loadShader("shaders/vs_simple.bin");
@@ -250,7 +251,6 @@ int main(int argc, char* argv[])
     TurboHybrid::ComponentSystem::InitInstance();
     TurboHybrid::ComponentSystem* world = TurboHybrid::ComponentSystem::GetComponentSystem();
 
-
     EngineState engine;
     engine.quit = false;
     engine.renderer = renderer;
@@ -261,7 +261,7 @@ int main(int argc, char* argv[])
     engine.viewport = {};
     engine.stack = stack;
 
-    TurboHybrid::ComponentSystem::assignCubeBuffers(vbh, ibh, m_program);
+    TurboHybrid::ComponentSystem::assignCubeBuffers(vbh, ibh, m_program, uh);
 
     /*
         init from file
@@ -283,7 +283,7 @@ int main(int argc, char* argv[])
 
     runMainLoop(&engine);
 
-      SDL_DestroyRenderer(renderer);
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
@@ -306,9 +306,6 @@ int main(int argc, char* argv[])
 
     system->Shutdown();
     delete system;
-
-
-    
 
     return 0;
 }

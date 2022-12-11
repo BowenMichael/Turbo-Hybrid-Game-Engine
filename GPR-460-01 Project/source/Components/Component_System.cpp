@@ -93,10 +93,10 @@ TurboHybrid::Transform* TurboHybrid::ComponentSystem::allocateTransform()
 	return nullptr;
 }
 
-void TurboHybrid::ComponentSystem::assignCubeBuffers(const bgfx::VertexBufferHandle& vbh, const bgfx::IndexBufferHandle& ibh, const bgfx::ProgramHandle& ph)
+void TurboHybrid::ComponentSystem::assignCubeBuffers(const bgfx::VertexBufferHandle& vbh, const bgfx::IndexBufferHandle& ibh, const bgfx::ProgramHandle& ph, const bgfx::UniformHandle& uh)
 {
 	for (int i = 0; i < MAX_COMPONENTS; i++) {
-		mComponents.sCubeRenderer[i].SetBuffers(vbh, ibh, ph);
+		mComponents.sCubeRenderer[i].SetBuffers(vbh, ibh, ph, uh);
 	}
 }
 

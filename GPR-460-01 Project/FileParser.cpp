@@ -92,7 +92,9 @@ void Turbohybrid::FileParser::LoadColorColliderData(TurboHybrid::ColliderColorCh
 
 void Turbohybrid::FileParser::LoadCubeRendererData(TurboHybrid::CubeRenderer* cube, const json& data)
 {
-	cube->load();
+	std::vector<float> color = {};
+	data.at("Color").get_to(color);
+	cube->load(Color(color[0], color[1], color[2], color[3]));
 }
 
 size_t Turbohybrid::FileParser::GetNumOfGameObjects()
