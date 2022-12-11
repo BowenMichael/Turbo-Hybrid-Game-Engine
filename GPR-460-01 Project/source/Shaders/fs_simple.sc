@@ -5,10 +5,15 @@ uniform vec4 u_base_color;
 void main()
 {
 	
-	//float NdotL = dot(normalize(v_normal), normalize(lightDir));
-    //NdotL = max(0.0, NdotL);
+	// set up point light
+	vec3 lightPos = vec3(0.0, 1.0, -3.0);
+	vec3 lightDir = lightPos - v_wpos;
+	
+	// get diffuse lighting calculation
+	float NdotL = dot(normalize(v_normal), normalize(lightDir));
+    NdotL = max(0.0, NdotL);
 
-    //gl_FragColor = vec4(abs(v_normal), 1.0);
-	//gl_FragColor = gl_Position;
-	gl_FragColor = u_base_color;
+	// set lit frag color
+	vec4 litColor = vec4(vec3(NdotL), 1.0) * u_base_color;
+	gl_FragColor = litColor;
 }
