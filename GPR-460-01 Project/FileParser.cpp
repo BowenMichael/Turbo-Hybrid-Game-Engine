@@ -56,7 +56,7 @@ void Turbohybrid::FileParser::LoadTransformData(TurboHybrid::Transform* transfor
 	std::vector<int> position = {};
 	data.get_to(position);
 	//std::cout << "(" << position[0] << ", " << position[1] << ")" << "\n";
-	transform->load(TurboHybrid::Vector3(position[0], position[1], 0));
+	transform->load(TurboHybrid::Vector3(position[0], position[1], position[2] ? position[2] : 0));
 }
 
 void Turbohybrid::FileParser::LoadRectData(TurboHybrid::RectangleRenderer* rectRend, const json& data)
@@ -78,7 +78,9 @@ void Turbohybrid::FileParser::LoadColliderData(TurboHybrid::RectangleCollider* c
 
 void Turbohybrid::FileParser::LoadPlayerControllerData(TurboHybrid::PlayerController* plr, const json& data)
 {
-	plr->load();
+	std::vector<float> speed = {};
+	data.at("Speed").get_to(speed);
+	plr->load(speed[0]);
 }
 
 void Turbohybrid::FileParser::LoadColorColliderData(TurboHybrid::ColliderColorChanger* cccr, const json& data)

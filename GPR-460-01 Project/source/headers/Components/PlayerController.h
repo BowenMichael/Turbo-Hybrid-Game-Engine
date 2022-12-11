@@ -15,12 +15,13 @@ namespace TurboHybrid {
 
 		static enum { kCompID = 'PLRC' };
 		static void CreateComponent(TurboHybrid::GameObject* gm, TurboHybrid::ComponentSystem* allocator);
-		void load();
+		void load(const float& speed);
 
 		void update(const float& deltatime);
 		
 		GameObject* gameObject;
 	private:
+		float mSpeed;
 		
 	};
 }

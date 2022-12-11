@@ -32,6 +32,7 @@
 #include "FileParser.h"
 #include <bgfx/include/bgfx/platform.h>
 #include "bgfx/include/bgfx/bgfx.h"
+#include "bgfx/include/bgfx/bgfx_util.h"
 #include <fstream>
 
 
@@ -166,7 +167,7 @@ int main(int argc, char* argv[])
     */
 
     bgfx::Init init;
-    init.type = bgfx::RendererType::Count;
+    init.type = bgfx::RendererType::OpenGL;
     init.platformData.nwh = wmi.info.win.window;
     init.platformData.ndt = NULL;
     init.resolution.width = WIDTH;

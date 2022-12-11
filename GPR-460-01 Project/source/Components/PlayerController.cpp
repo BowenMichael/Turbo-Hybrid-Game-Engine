@@ -4,12 +4,14 @@
 #include <headers/Components/Component_System.h>
 
 TurboHybrid::PlayerController::PlayerController()
-	:gameObject(nullptr)
+	:gameObject(nullptr),
+	mSpeed(0)
 {
 }
 
 TurboHybrid::PlayerController::PlayerController(GameObject* gameobject)
-	:gameObject(gameobject)
+	:gameObject(gameobject),
+	mSpeed(0)
 {
 }
 
@@ -24,8 +26,9 @@ void TurboHybrid::PlayerController::CreateComponent(TurboHybrid::GameObject* gm,
 	gm->SetPlayerController(tmp);
 }
 
-void TurboHybrid::PlayerController::load()
+void TurboHybrid::PlayerController::load(const float& speed)
 {
+	mSpeed = speed;
 }
 
 void TurboHybrid::PlayerController::update(const float& deltatime)
@@ -45,5 +48,11 @@ void TurboHybrid::PlayerController::update(const float& deltatime)
 	if (keystate[SDL_SCANCODE_D]) {
 		dir += Vector3(1, 0, 0);
 	}
-	gameObject->GetTransform()->TranslateRect(dir * .1f);
+	if (keystate[SDL_SCANCODE_Q]) {
+		dir += Vector3(0, 0, 1);
+	}
+	if (keystate[SDL_SCANCODE_E]) {
+		dir += Vector3(0, 0, -1);
+	}
+	gameObject->GetTransform()->TranslateRect(dir * mSpeed);
 }
