@@ -302,6 +302,12 @@ int main(int argc, char* argv[])
     delete stack;
 
     TurboHybrid::ComponentSystem::DeleteInstance();
+    bgfx::destroy(ibh);
+    bgfx::destroy(vbh);
+    bgfx::destroy(vsh);
+    bgfx::destroy(fsh);
+    bgfx::destroy(m_program);
+    bgfx::destroy(uh);
     bgfx::shutdown();
 
     system->Shutdown();
@@ -400,16 +406,18 @@ void render(EngineState* engine) {
     TurboHybrid::ComponentSystem::GetComponentSystem()->renderCubes(engine->frame);
 
     /*
+        Render next frame
+    */
+
+    bgfx::frame();
+
+    /*
         Other mesh rendering
     */
 
     //render your other mesh
 
-    /*
-        Render next frame
-    */
-
-    bgfx::frame();
+    
 
 
     
@@ -453,5 +461,6 @@ bgfx::ShaderHandle loadShader(const char* FILENAME)
     mem->data[mem->size - 1] = '\0';
     fclose(file);
 
+    delete filePath;
     return bgfx::createShader(mem);
 }
