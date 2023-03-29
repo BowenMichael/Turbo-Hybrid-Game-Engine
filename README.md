@@ -16,7 +16,7 @@ once we integrated the bgfx package together he focused on shaders while I focus
 
 ## Showcase
 
-![Image!](https://media.licdn.com/dms/image/C4E22AQGQaws2uKDzjA/feedshare-shrink_800/0/1671213464099?e=1675900800&v=beta&t=nnPV_Z77h1mxIjZ3QnXLmNKPReHG9lfDTiUgLRL5VnY)
+![Image!](https://michael-bowen.com/images/turbo-hybrid-cube.gif)
 
 ## Other links
 
